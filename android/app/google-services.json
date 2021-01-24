@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "302932258834",
+    "project_id": "ttr-release",
+    "storage_bucket": "ttr-release.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302932258834:android:5b7767f07575d689cbe8cb",
+        "android_client_info": {
+          "package_name": "com.ttr_release"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302932258834-i4qh1siespsro4nc8ootdlqdmtl1umoa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAksaREZrtWNNB9bodjAVkUX7zUpM7wv7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302932258834-i4qh1siespsro4nc8ootdlqdmtl1umoa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-9301871566936075~9804045082"
+    }
+  ],
+  "configuration_version": "1"
+}
