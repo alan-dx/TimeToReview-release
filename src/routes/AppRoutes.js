@@ -40,7 +40,7 @@ const AppRoutes = () => {
                     component={HomeScreen} 
                     options={{
                         headerShown: true,
-                        header: () => <Header title="MENU FREE" showLogout color="#FCFCFC" />
+                        header: () => <Header title="MENU" showLogout color="#FCFCFC" />
                     }}
                 />
                 <Screen 
