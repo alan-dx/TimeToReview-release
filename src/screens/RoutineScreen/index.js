@@ -376,17 +376,6 @@ const RoutineScreen = (props) => {
                     : null
                 }
             </View>
-            <BannerAd
-                unitId={TestIds.BANNER}
-                size={BannerAdSize.FULL_BANNER}
-                requestOptions={{
-                requestNonPersonalizedAdsOnly: true,}}
-                onAdLoaded={() => {
-                    console.log('Advert loaded')
-                }}
-                onAdFailedToLoad={(error) => {
-                console.error('Advert failed to load: ', error);}}
-            />
         </>
     )
     
