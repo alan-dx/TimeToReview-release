@@ -13,12 +13,19 @@ import {
   StatusBar,
 } from 'react-native';
 
+import AppStack from './src/routes/AppStack';
+import { AuthProvider } from './src/contexts/auth';
+
 import { BannerAd, BannerAdSize, TestIds } from '@react-native-firebase/admob';
 
 const App: () => React$Node = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
+      <AuthProvider>
+        <StatusBar barStyle="dark-content" backgroundColor="#FCFCFC"/>
+        <AppStack />
+      </AuthProvider>
+      {/* <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <Text>TTR agora vai, fé em Deus</Text>
         <BannerAd
@@ -28,7 +35,7 @@ const App: () => React$Node = () => {
             requestNonPersonalizedAdsOnly: true,
           }}
         />
-      </SafeAreaView>
+      </SafeAreaView> */}
     </>
   );
 };

@@ -378,7 +378,7 @@ const RoutineScreen = (props) => {
             </View>
             <BannerAd
                 unitId={TestIds.BANNER}
-                size={BannerAdSize.SMART_BANNER}
+                size={BannerAdSize.FULL_BANNER}
                 requestOptions={{
                 requestNonPersonalizedAdsOnly: true,}}
                 onAdLoaded={() => {
