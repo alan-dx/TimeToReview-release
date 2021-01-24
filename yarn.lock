@@ -1134,6 +1134,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
+"@react-native-firebase/admob@^10.5.1":
+  version "10.5.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/admob/-/admob-10.5.1.tgz#bee9d87a697a2974264123b9770ecf35272fb955"
+  integrity sha512-lMvQ0OeqAlJlmfyRFd7fpEcAAG6WlJUwd9UuQIFxW5rGerbu4BXALFVrEZ0eQw5BpHfJtvS68++d6TbhkK2Y5g==
+
 "@react-native-firebase/app@^10.5.0":
   version "10.5.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-10.5.0.tgz#aa46cd3a62d2117914a6f81ffea0d1b3b9ef15c6"
