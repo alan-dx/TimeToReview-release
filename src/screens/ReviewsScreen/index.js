@@ -538,11 +538,6 @@ const ReviewsScreen = (props) => {
                     /> : null
                 }
             </View>
-            <View style={styles.adBox}>
-                    <Text style={styles.adBoxLabel}>Você pode remover os anúncios adquirindo a versão Premium do TimeToReview.
-                        Para saber mais verifique a sessão "Seja Premium" no Menu.
-                    </Text>
-            </View>
         </>
     )
     

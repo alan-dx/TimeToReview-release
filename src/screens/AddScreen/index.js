@@ -123,42 +123,53 @@ const AddScreen = (props) => {
         })
     }
     
-    function handleImageSelector() {
-        ImagePicker.showImagePicker({
-            title: "Selecionar Foto",
-            mediaType: "photo",
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        }, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
+    async function handleImageSelector() {
+
+        try {
+            
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.images],
+            });
+            
+            let url;
+            
+            await RNFetchBlob.fs
+            .stat(res.uri)
+            .then((stats) => {
+                console.log(stats.path)
+                url = `${stats.path}`
+            })
+            .catch((err) => {
                 Alert.alert(
-                    "Precisamos dessa permissão!",
-                    "Para selecionar/tirar uma foto precisamos da permissão solicitada. Por favor, realize o procedimento novamente e aceite a solicitação.",
+                    "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
+                    "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema"+
+                    " navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
+                    "Esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. \n\n"+
+                    "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
                     [
-                      {
-                        text: "Ok, vamos lá!",
-                        onPress: async () => {},
-                        style: "cancel"
-                      },
+                        {
+                            text: "Ok, vou tentar de novo.",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                        }
                     ],
                     { cancelable: false }
-                );
-            } else if (response.customButton) {
-                console.log(
-                    'User tapped custom button: ',
-                    response.customButton
                     );
-                    console.log(response.customButton);
+                });
+                
+                //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
+
+                setImageReview(url)
+                
+            } catch (err) {
+                if (DocumentPicker.isCancel(err)) {
+                    // User cancelled the picker, exit any dialogs or menus and move on
+                    console.log('cancelou')
                 } else {
-                    console.log('uri',response.path, typeof(response.path))
-                    setImageReview(response.path)
+                    console.log(err)
+                alert('Houve um erro ao selecionar o arquivo, tente novamente!')
             }
-            
-        })
+        }
     }
 
     function handleCreateReview() {
@@ -299,30 +310,6 @@ const AddScreen = (props) => {
                     </View>
                 </View> 
             </View>
-            { handleChoiceProfilePhotoModal ? 
-                    <CustomModal 
-                        modalVisible={handleChoiceProfilePhotoModal}
-                        handleCloseModalButton={() => setHandleChoiceProfilePhotoModal(false)}
-                        modalCardHeight={200}
-                        modalTitle="SELECIONE UMA OPÇÃO"
-                        doNotShowCheckButton
-                    >
-                        <View style={styles.optionPictureBox}>
-                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(true)}>
-                                <View style={styles.optionPicture}>
-                                    <Icon name="camera" size={30} color="#303030" />
-                                    <Text style={styles.optionPictureText}>Tirar Foto</Text>
-                                </View>
-                            </TouchableHighlight>
-                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(false)}>
-                                <View style={styles.optionPicture}>
-                                    <Icon name="grid" size={30} color="#303030" />
-                                    <Text style={styles.optionPictureText}>Selecionar foto da galeria</Text>
-                                </View>
-                            </TouchableHighlight>
-                        </View>
-                    </CustomModal> : null
-            }
         </KeyboardAvoidingView>
     )
 }
