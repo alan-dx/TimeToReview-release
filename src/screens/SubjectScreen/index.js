@@ -11,6 +11,7 @@ import api from '../../services/api';
 import ScreenTutorial from '../../components/ScreenTutorial';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
 
 const SubjectScreen = (props) => {
 
@@ -174,9 +175,17 @@ const SubjectScreen = (props) => {
                 }
             </View>
             <View style={styles.adBox}>
-                    <Text style={styles.adBoxLabel}>Você pode remover os anúncios adquirindo a versão Premium do TimeToReview.
-                    Para saber mais verifique a sessão "Seja Premium" no Menu.
-                    </Text>
+                <BannerAd
+                    unitId={TestIds.BANNER}
+                    size={BannerAdSize.FULL_BANNER}
+                    requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,}}
+                    onAdLoaded={() => {
+                        console.log('Advert loaded')
+                    }}
+                    onAdFailedToLoad={(error) => {
+                    console.error('Advert failed to load: ', error);}}
+                />
             </View>
         </>
     )

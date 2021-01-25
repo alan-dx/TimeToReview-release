@@ -53,7 +53,7 @@ const PreLoadScreen = () => {
     }, [])
 
     return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', color: '#FCFCFC'}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FCFCFC'}}>
             <ActivityIndicator size="large" color="#303030" />
         </View>
     )

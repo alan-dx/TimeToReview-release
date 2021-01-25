@@ -11,7 +11,7 @@ import api from '../../services/api';
 import ScreenTutorial from '../../components/ScreenTutorial';
 import AsyncStorage from '@react-native-community/async-storage';
 import CustomModal from '../../components/CustomModal';
-import { InterstitialAd, RewardedAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
+import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
 
 const RoutineScreen = (props) => {
 
@@ -376,17 +376,19 @@ const RoutineScreen = (props) => {
                     : null
                 }
             </View>
-            <BannerAd
-                unitId={TestIds.BANNER}
-                size={BannerAdSize.FULL_BANNER}
-                requestOptions={{
-                requestNonPersonalizedAdsOnly: true,}}
-                onAdLoaded={() => {
-                    console.log('Advert loaded')
-                }}
-                onAdFailedToLoad={(error) => {
-                console.error('Advert failed to load: ', error);}}
-            />
+            <View style={styles.adBox}>
+                <BannerAd
+                    unitId={TestIds.BANNER}
+                    size={BannerAdSize.FULL_BANNER}
+                    requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,}}
+                    onAdLoaded={() => {
+                        console.log('Advert loaded')
+                    }}
+                    onAdFailedToLoad={(error) => {
+                    console.error('Advert failed to load: ', error);}}
+                />
+            </View>
         </>
     )
     

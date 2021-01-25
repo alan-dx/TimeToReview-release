@@ -14,9 +14,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     adBox: {
-        minHeight: 90,
         width: '100%',
-        backgroundColor: '#e74e36',
+        backgroundColor: '#FCFCFC',
 
         alignItems: 'center',
         justifyContent: 'center'

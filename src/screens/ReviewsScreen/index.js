@@ -18,6 +18,7 @@ import TrackPlayer from 'react-native-track-player';
 import PlayerModal from '../../components/PlayerModal';
 import NotesModal from '../../components/NotesModal';
 import ImageModal from '../../components/ImageModal';
+import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
 
 const ReviewsScreen = (props) => {
 
@@ -37,6 +38,7 @@ const ReviewsScreen = (props) => {
     const [trackPlayer, setTrackPlayer] = useState('')
     const [notesToShow, setNotesToShow] = useState(null)
     const [imageReview, setImageReview] = useState('')
+    const [adLabel, setAdLabel] = useState(true)
 
     const cycleFlatList = useRef(null)
 
@@ -539,9 +541,18 @@ const ReviewsScreen = (props) => {
                 }
             </View>
             <View style={styles.adBox}>
-                    <Text style={styles.adBoxLabel}>Você pode remover os anúncios adquirindo a versão Premium do TimeToReview.
-                        Para saber mais verifique a sessão "Seja Premium" no Menu.
-                    </Text>
+                <BannerAd
+                    unitId={TestIds.BANNER}
+                    size={BannerAdSize.FULL_BANNER}
+                    requestOptions={{
+                        requestNonPersonalizedAdsOnly: true
+                    }}
+                    onAdLoaded={() => {
+                        console.log('Advert loaded')
+                    }}
+                    onAdFailedToLoad={(error) => {
+                    console.error('Advert failed to load: ', error);}}
+                />
             </View>
         </>
     )

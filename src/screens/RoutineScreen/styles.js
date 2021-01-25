@@ -75,9 +75,8 @@ const styles = StyleSheet.create({
         color: '#303030'
     },
     adBox: {
-        minHeight: 200,
         width: '100%',
-        backgroundColor: '#e74e36',
+        backgroundColor: '#FCFCFC',
 
         alignItems: 'center',
         justifyContent: 'center'

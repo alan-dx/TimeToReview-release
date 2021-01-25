@@ -9,9 +9,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     adBox: {
-        minHeight: 90,
         width: '100%',
-        backgroundColor: '#e74e36',
+        backgroundColor: '#FCFCFC',
 
         alignItems: 'center',
         justifyContent: 'center'
