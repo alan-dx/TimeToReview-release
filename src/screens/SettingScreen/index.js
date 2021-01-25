@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { View, Image, Text, Linking, Alert, ToastAndroid, ScrollView, TouchableHighlight } from 'react-native';
+import { View, Image, Text, Linking, Alert, ToastAndroid, ScrollView, TouchableHighlight, PermissionsAndroid } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/AntDesign';
@@ -10,7 +10,7 @@ import api from '../../services/api';
 import notifications from '../../services/notifications';
 import PushNotification from 'react-native-push-notification';
 import { useNavigation } from '@react-navigation/native';
-import ImagePicker from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import { openComposer } from 'react-native-email-link';
 import CustomModal from '../../components/CustomModal';
@@ -26,6 +26,7 @@ const SettingScreen = (props) => {
     const [timeHour, setTimeHour] = useState(new Date(user.reminderTime).getHours())
     const [timeMin, setTimeMin] = useState(new Date(user.reminderTime).getMinutes())
     const [filePath, setFilePath] = useState(null)
+    const [handleChoiceProfilePhotoModal, setHandleChoiceProfilePhotoModal] = useState(false)
 
     useEffect(()  => {
 
@@ -176,34 +177,52 @@ const SettingScreen = (props) => {
     }
 
     function handleChangeProfilePhoto() {
-       ImagePicker.showImagePicker({
-           title: "Selecionar Foto",
-           mediaType: "photo",
-           storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-       }, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
+        setHandleChoiceProfilePhotoModal(true)
+    }
 
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-                alert("Precisamos dessa permissão...")
-            } else if (response.customButton) {
-                console.log(
-                'User tapped custom button: ',
-                response.customButton
-                );
-                console.log(response.customButton);
+    async function handleTakeProfilePicture(option) {
+
+        await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        ]).then((response) => {
+            console.log(response)
+            if((response["android.permission.CAMERA"] == 'denied') || (response["android.permission.WRITE_EXTERNAL_STORAGE"] == 'denied')) {
+                alert('Precisamos dessas permissão para acessar sua câmera e salvar a foto na galeria. Por favor realize o processo novamente!')
             } else {
-                let source = response;
-                console.log('uri',response.path)
-                setFilePath(source);
-                AsyncStorage.setItem("@TTR:profilephoto", JSON.stringify(source))
+                if (option) {
+                    launchCamera({
+                        mediaType: 'photo',
+                        saveToPhotos: true,
+                        includeBase64: true
+                    }, (response) => {
+                        if (response.didCancel) {
+                            console.log('User cancelled')
+                        } else if (response.base64) {
+                            setFilePath(response)
+                            AsyncStorage.setItem("@TTR:profilephoto", JSON.stringify(response))
+                            setHandleChoiceProfilePhotoModal(false)
+                        }
+                    })
+                } else {
+                    launchImageLibrary({
+                        mediaType: 'photo',
+                        includeBase64: true
+                    }, (response) => {
+                        if (response.didCancel) {
+                            console.log('User cancelled')
+                        } else if (response.base64) {
+                            setFilePath(response)
+                            AsyncStorage.setItem("@TTR:profilephoto", JSON.stringify(response))
+                            setHandleChoiceProfilePhotoModal(false)
+                        }
+                    })
+                }
             }
-    
-       })
+        }).catch((err) => {
+            console.log(err)
+        });
+
     }
 
     function handleUpdateUserData(newName) {
@@ -243,7 +262,7 @@ const SettingScreen = (props) => {
             <View style={styles.header}>
                 <RectButton style={styles.profilePhotoBox} onPress={handleChangeProfilePhoto}>
                     { (filePath != null) ? 
-                        <Image source={{uri: 'data:image/jpeg;base64,' + filePath.data}} style={{width: 150, height: 150, borderRadius: 100}} /> : 
+                        <Image source={{uri: 'data:image/jpeg;base64,' + filePath.base64}} style={{width: 150, height: 150, borderRadius: 100}} /> : 
                         <Icon name="camera" size={40} color="#303030" />
                     }
                 </RectButton>
@@ -400,6 +419,31 @@ const SettingScreen = (props) => {
                         <Text style={styles.reportModalCustomButtonText}>CONTATE</Text>
                     </TouchableHighlight>
                 </CustomModal>: null
+            }
+            {
+                handleChoiceProfilePhotoModal ? 
+                    <CustomModal 
+                        modalVisible={handleChoiceProfilePhotoModal}
+                        handleCloseModalButton={() => setHandleChoiceProfilePhotoModal(false)}
+                        modalCardHeight={200}
+                        modalTitle="SELECIONE UMA OPÇÃO"
+                        doNotShowCheckButton
+                    >
+                        <View style={styles.optionPictureBox}>
+                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(true)}>
+                                <View style={styles.optionPicture}>
+                                    <Icon name="camera" size={30} color="#303030" />
+                                    <Text style={styles.optionPictureText}>Tirar Foto</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(false)}>
+                                <View style={styles.optionPicture}>
+                                    <Icon name="grid" size={30} color="#303030" />
+                                    <Text style={styles.optionPictureText}>Selecionar foto da galeria</Text>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    </CustomModal> : null
             }
 
         </View>
