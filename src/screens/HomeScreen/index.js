@@ -5,7 +5,7 @@ import styles from './styles';
 import stylesSteps from './stylesSteps';
 import AuthContext from '../../contexts/auth';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/Feather';
 import MenuButton from '../../components/MenuButton';
 import Chart from '../../components/ChartLine';
 import { BorderlessButton } from 'react-native-gesture-handler';
@@ -187,7 +187,7 @@ const HomeScreen = () => {
             <View style={styles.performanceBox}>
                 <View style={styles.performanceButtonBox}>
                     <BorderlessButton onPress={handleClickGoToPerformanceScreen} style={styles.performanceButton}>
-                        <Icon name="linechart" size={22} color="#FFF" />
+                        <Icon2 name="pie-chart" size={22} color="#FFF" />
                     </BorderlessButton>
                 </View>
                 <Text style={styles.performanceButtonText}>Visualizar desempenho completo</Text>
@@ -225,7 +225,7 @@ const HomeScreen = () => {
                 </View>
                 <View style={styles.menuItemBox}>
                     <MenuButton color="#FFF" textColor="#303030" onPress={handleClickGoToSettingScreen} title="Configurações">
-                        <Icon name="setting" size={28} color="#303030" />
+                        <Icon2 name="settings" size={25} color="#303030" />
                     </MenuButton>
                 </View>
             </View>
