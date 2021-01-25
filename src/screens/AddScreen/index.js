@@ -299,6 +299,30 @@ const AddScreen = (props) => {
                     </View>
                 </View> 
             </View>
+            { handleChoiceProfilePhotoModal ? 
+                    <CustomModal 
+                        modalVisible={handleChoiceProfilePhotoModal}
+                        handleCloseModalButton={() => setHandleChoiceProfilePhotoModal(false)}
+                        modalCardHeight={200}
+                        modalTitle="SELECIONE UMA OPÇÃO"
+                        doNotShowCheckButton
+                    >
+                        <View style={styles.optionPictureBox}>
+                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(true)}>
+                                <View style={styles.optionPicture}>
+                                    <Icon name="camera" size={30} color="#303030" />
+                                    <Text style={styles.optionPictureText}>Tirar Foto</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(false)}>
+                                <View style={styles.optionPicture}>
+                                    <Icon name="grid" size={30} color="#303030" />
+                                    <Text style={styles.optionPictureText}>Selecionar foto da galeria</Text>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    </CustomModal> : null
+            }
         </KeyboardAvoidingView>
     )
 }

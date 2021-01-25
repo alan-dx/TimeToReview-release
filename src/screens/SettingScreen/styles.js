@@ -154,6 +154,23 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Bold',
         color: '#FFF',
         fontSize: 19
+    },
+    optionPictureText: {
+        color: '#303030',
+        fontFamily: 'Archivo-SemiBold',
+        fontSize: 14
+    },
+    optionPictureBox: {
+        flexDirection: 'row',
+        width: '100%',
+
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
+    optionPicture: {
+        flexDirection: 'column',
+
+        alignItems: 'center',
     }
 })
 
