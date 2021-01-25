@@ -541,7 +541,7 @@ const ReviewsScreen = (props) => {
                 }
             </View>
             <View style={styles.adBox}>
-                <BannerAd
+                {/* <BannerAd
                     unitId={TestIds.BANNER}
                     size={BannerAdSize.FULL_BANNER}
                     requestOptions={{
@@ -552,7 +552,7 @@ const ReviewsScreen = (props) => {
                     }}
                     onAdFailedToLoad={(error) => {
                     console.error('Advert failed to load: ', error);}}
-                />
+                /> */}
             </View>
         </>
     )

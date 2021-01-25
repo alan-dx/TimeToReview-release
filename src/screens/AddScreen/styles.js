@@ -107,6 +107,23 @@ const styles = StyleSheet.create({
     },
     featuresButton: {
         alignItems: 'center',
+    },
+    optionPictureText: {
+        color: '#303030',
+        fontFamily: 'Archivo-SemiBold',
+        fontSize: 14
+    },
+    optionPictureBox: {
+        flexDirection: 'row',
+        width: '100%',
+
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
+    optionPicture: {
+        flexDirection: 'column',
+
+        alignItems: 'center',
     }
 })
 
