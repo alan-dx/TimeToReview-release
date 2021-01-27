@@ -40,10 +40,20 @@ const PerformanceScreen = () => {
             porcentagem por matéria, desempenho diário e muito mais.
             {"\n"}
             {"\n"}
-            Aproveite e tire o máximo de proveito desses dados!
-            {"\n"}
-            {"\n"}
-            Você pode interagir com os gráficos para ter acesso a informações extras.
+            Tente tirar o máximo de proveito desses dados!
+        </Text>
+    </View>
+    let Step1 = <View style={stylesSteps.container}>
+        <View style={{flexDirection: 'row', width: 100, alignItems: 'center', justifyContent: 'space-around'}}>
+            <View style={[stylesSteps.performanceChartIcon, {backgroundColor: '#e74e36'}]}>
+                <Text style={stylesSteps.performanceChartIconLabel}>5</Text>
+            </View>
+            <View style={[stylesSteps.performanceChartIcon, {backgroundColor: '#60c3eb'}]}>
+                <Text style={stylesSteps.performanceChartIconLabel}>1.25</Text>
+            </View>
+        </View>
+        <Text style={stylesSteps.desciptionText}>
+            Você pode interagir com os gráficos na tela de desempenho para obter informações mais detalhadas.
         </Text>
     </View>
 
@@ -202,7 +212,7 @@ const PerformanceScreen = () => {
             {handleOpenTutorialModal ? 
                 <ScreenTutorial 
                     handleCloseModal={() => setHandleOpenTutorialModal(false)}
-                    steps={[Step0]}
+                    steps={[Step0, Step1]}
                 />
                 : null
             }

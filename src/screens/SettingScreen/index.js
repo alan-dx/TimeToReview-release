@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon3 from 'react-native-vector-icons/FontAwesome';
 import AuthContext from '../../contexts/auth';
-import { RectButton } from 'react-native-gesture-handler';
+import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 import api from '../../services/api';
 import notifications from '../../services/notifications';
 import PushNotification from 'react-native-push-notification';
@@ -27,6 +27,7 @@ const SettingScreen = (props) => {
     const [timeMin, setTimeMin] = useState(new Date(user.reminderTime).getMinutes())
     const [filePath, setFilePath] = useState(null)
     const [handleChoiceProfilePhotoModal, setHandleChoiceProfilePhotoModal] = useState(false)
+    const menuScroll = useRef(null)
 
     useEffect(()  => {
 
@@ -257,6 +258,10 @@ const SettingScreen = (props) => {
           );
     }
 
+    function handleControllScroll() {
+        menuScroll.current.scrollToEnd({animated: true})
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -270,7 +275,13 @@ const SettingScreen = (props) => {
                 <Text style={styles.profileEmail}>{user.email}</Text>
             </View>
             <View style={styles.body}>
-                <ScrollView showsVerticalScrollIndicator>
+                <BorderlessButton onPress={handleControllScroll} style={styles.bodyScrollButton}>
+                    <Icon name="chevron-down" size={25} color="#e74e36" />
+                </BorderlessButton>
+                <ScrollView 
+                    showsVerticalScrollIndicator
+                    ref={menuScroll}
+                >
                     <RectButton style={styles.optionContainer} onPress={handleResetCharts}>
                         <Text style={styles.optionText}>Zerar dados de desempenho</Text>
                         <Icon name="chevron-right" size={20} color="#60c3eb" />
@@ -400,7 +411,7 @@ const SettingScreen = (props) => {
                 handleReportModal ? <CustomModal 
                     modalVisible={handleReportModal}
                     handleCloseModalButton={handleCloseReportModal}
-                    modalCardHeight={250}
+                    modalCardHeight={300}
                     modalTitle="ENTRE EM CONTATO"
                     doNotShowCheckButton
                 >
@@ -408,6 +419,9 @@ const SettingScreen = (props) => {
                         <Text style={styles.reportModalInfoText}>
                             Relate bugs, sugestões, agradecimentos ou qualquer problema que tenha enfrentado em nosso App, nosso 
                             objetivo é promover a melhor experiência possível para nossos usuários.
+                            {'\n'}
+                            {'\n'}
+                            - Email: contato_almeidadev@gmail.com
                         </Text>
                     </View>
                     <TouchableHighlight style={styles.reportModalCustomButton} underlayColor={"#72c3eb"} onPress={() => {
@@ -433,7 +447,7 @@ const SettingScreen = (props) => {
                             <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleTakeProfilePicture(true)}>
                                 <View style={styles.optionPicture}>
                                     <Icon name="camera" size={30} color="#303030" />
-                                    <Text style={styles.optionPictureText}>Tirar Foto</Text>
+                                    <Text style={styles.optionPictureText}>Tirar foto</Text>
                                 </View>
                             </TouchableHighlight>
                             <TouchableHighlight underlayColor={"#FFFFF"} onPress={() => handleTakeProfilePicture(false)}>

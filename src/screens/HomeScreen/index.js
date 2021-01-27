@@ -242,13 +242,19 @@ const HomeScreen = () => {
                 <CustomModal
                     modalVisible={handleOpenBePremiumModal}
                     handleCloseModalButton={handleCloseBePremium}
-                    modalCardHeight={250}
+                    modalCardHeight={300}
                     modalTitle="SEJA PREMIUM"
                     doNotShowCheckButton
                 >
                     <View style={styles.bePremiumModalInfoBox}>
                         <Text style={styles.bePremiumModalInfoText}>
-                            Obtenha a versão Premium do TimeToReview e tenha acesso a benefícios exclusivos.
+                            Obtenha a versão Premium do TimeToReview e tenha acesso aos seguintes benefícios: 
+                            {'\n'}
+                            {'\n'}
+                            {'\t'}{'\t'} - Remoção de todos os anúncios;{'\n'}
+                            {'\t'}{'\t'} - Criação ilimitada de disciplinas;{'\n'}
+                            {'\t'}{'\t'} - Criação ilimitada de sequências;{'\n'}
+                            {'\t'}{'\t'} - Dicas de estudo;{'\n'}
                         </Text>
                     </View>
                     <TouchableHighlight style={styles.bePremiumModalCustomButton} underlayColor={"#72c3eb"} onPress={() => {

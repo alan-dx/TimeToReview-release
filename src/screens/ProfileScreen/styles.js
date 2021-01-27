@@ -121,6 +121,23 @@ const styles = StyleSheet.create({
         fontFamily: 'Archivo-SemiBold',
         fontSize: 13,
         color: '#303030'
+    },
+    optionPictureText: {
+        color: '#303030',
+        fontFamily: 'Archivo-SemiBold',
+        fontSize: 14
+    },
+    optionPictureBox: {
+        flexDirection: 'row',
+        width: '100%',
+
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
+    optionPicture: {
+        flexDirection: 'column',
+
+        alignItems: 'center',
     }
 })
 

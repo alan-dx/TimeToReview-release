@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, Image, TextInput } from 'react-native';
+import { View, Text, Image, TextInput, TouchableHighlight, PermissionsAndroid } from 'react-native';
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Feather';
 import AuthContext from '../../contexts/auth';
-import ImagePicker from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
@@ -17,6 +17,7 @@ const ProfileScreen = () => {
     const [filePath, setFilePath] = useState(null)
     const [handleOpenInputModal, setHandleOpenInputModal] = useState(false)
     const [inputNameModalValue, setInputNameModalValue] = useState(user.name)
+    const [handleChoiceProfilePhotoModal, setHandleChoiceProfilePhotoModal] = useState(false)
 
     useEffect(()  => {
         async function loadStorageProfilePhoto() {
@@ -27,33 +28,49 @@ const ProfileScreen = () => {
         loadStorageProfilePhoto()
     }, [])
 
-    function handleChangeProfilePhoto() {
-        ImagePicker.showImagePicker({
-            title: "Selecionar Foto",
-            mediaType: "photo",
-            storageOptions: {
-             skipBackup: true,
-             path: 'images',
-           },
-        }, (response) => {
-             if (response.didCancel) {
-                 console.log('User cancelled image picker');
-             } else if (response.error) {
-                 console.log('ImagePicker Error: ', response.error);
-                 alert("Seu dispositivo não é compatível com essa funcionalidade...")
-             } else if (response.customButton) {
-                 console.log(
-                 'User tapped custom button: ',
-                 response.customButton
-                 );
-                 console.log(response.customButton);
-             } else {
-                 let source = response;
-                 console.log('else')
-                 setFilePath(source);
-                 AsyncStorage.setItem("@TTR:profilephoto", JSON.stringify(source))
-             }
-        })
+    async function handleChangeProfilePhoto(option) {
+
+        await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        ]).then((response) => {
+            console.log(response)
+            if((response["android.permission.CAMERA"] == 'denied') || (response["android.permission.WRITE_EXTERNAL_STORAGE"] == 'denied')) {
+                alert('Precisamos dessas permissão para acessar sua câmera e salvar a foto na galeria. Por favor realize o processo novamente!')
+            } else {
+                if (option) {
+                    launchCamera({
+                        mediaType: 'photo',
+                        saveToPhotos: true,
+                        includeBase64: true
+                    }, (response) => {
+                        if (response.didCancel) {
+                            console.log('User cancelled')
+                        } else if (response.base64) {
+                            setFilePath(response)
+                            AsyncStorage.setItem("@TTR:profilephoto", JSON.stringify(response))
+                            setHandleChoiceProfilePhotoModal(false)
+                        }
+                    })
+                } else {
+                    launchImageLibrary({
+                        mediaType: 'photo',
+                        includeBase64: true
+                    }, (response) => {
+                        if (response.didCancel) {
+                            console.log('User cancelled')
+                        } else if (response.base64) {
+                            setFilePath(response)
+                            AsyncStorage.setItem("@TTR:profilephoto", JSON.stringify(response))
+                            setHandleChoiceProfilePhotoModal(false)
+                        }
+                    })
+                }
+            }
+        }).catch((err) => {
+            console.log(err)
+        });
+
 
     }
 
@@ -94,9 +111,9 @@ const ProfileScreen = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.welcomeText}>Olá, Bem Vindo(a)!</Text>
-                <RectButton style={styles.profilePhotoBox} onPress={handleChangeProfilePhoto}>
+                <RectButton style={styles.profilePhotoBox} onPress={() => setHandleChoiceProfilePhotoModal(true)}>
                     { (filePath != null) ?
-                        <Image source={{uri: 'data:image/jpeg;base64,' + filePath.data}} style={{width: 150, height: 150, borderRadius: 100}} /> : 
+                        <Image source={{uri: 'data:image/jpeg;base64,' + filePath.base64}} style={{width: 150, height: 150, borderRadius: 100}} /> : 
                         <Icon name="camera" size={40} color="#303030" />
                     }
                 </RectButton>
@@ -111,7 +128,7 @@ const ProfileScreen = () => {
                         <Text style={styles.profileEmail}>{user.email}</Text>
                     </View>
                 </View>
-                <Text style={styles.infoText}>{allReviews.length} {allReviews.length == 1 ? 'revisão' : 'reviiiisões'}, {routines.length} {routines.length == 1 ? 'rotina' : 'rotinas'} e {subjects.length} {subjects.length == 1 ? 'matéria cadastrada' : 'matérias cadastradas'}</Text>
+                <Text style={styles.infoText}>{allReviews.length} {allReviews.length == 1 ? 'revisão' : 'revisões'}, {routines.length} {routines.length == 1 ? 'rotina' : 'rotinas'} e {subjects.length} {subjects.length == 1 ? 'matéria cadastrada' : 'matérias cadastradas'}</Text>
             </View>
             <View style={styles.menuBox}>
                 <RectButton style={styles.optionContainer}  onPress={handleChangePass}>
@@ -141,6 +158,31 @@ const ProfileScreen = () => {
                                 onChangeText={(text) => setInputNameModalValue(text)}
                                 textAlign="center"
                             />
+                        </View>
+                    </CustomModal> : null
+            }
+            {
+                handleChoiceProfilePhotoModal ? 
+                    <CustomModal 
+                        modalVisible={handleChoiceProfilePhotoModal}
+                        handleCloseModalButton={() => setHandleChoiceProfilePhotoModal(false)}
+                        modalCardHeight={200}
+                        modalTitle="SELECIONE UMA OPÇÃO"
+                        doNotShowCheckButton
+                    >
+                        <View style={styles.optionPictureBox}>
+                            <TouchableHighlight underlayColor={"#FFFF"} onPress={() => handleChangeProfilePhoto(true)}>
+                                <View style={styles.optionPicture}>
+                                    <Icon name="camera" size={30} color="#303030" />
+                                    <Text style={styles.optionPictureText}>Tirar foto</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight underlayColor={"#FFFFF"} onPress={() => handleChangeProfilePhoto(false)}>
+                                <View style={styles.optionPicture}>
+                                    <Icon name="grid" size={30} color="#303030" />
+                                    <Text style={styles.optionPictureText}>Selecionar Foto da galeria</Text>
+                                </View>
+                            </TouchableHighlight>
                         </View>
                     </CustomModal> : null
             }

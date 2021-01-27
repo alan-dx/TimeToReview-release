@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
         
         flex: 1,
         marginTop: 10,
-        paddingTop: 14,
 
         elevation: 7
     },
@@ -171,6 +170,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
 
         alignItems: 'center',
+    },
+    bodyScrollButton: {
+        alignSelf: 'center',
+        padding: 5
     }
 })
 

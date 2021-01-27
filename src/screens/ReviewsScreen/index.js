@@ -181,11 +181,11 @@ const ReviewsScreen = (props) => {
     let Step5 = <View style={stylesSteps.container}> 
         <Icon2 name="library-books" size={40} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
-            Anotações!
+            Visualizar anotações!
             {"\n"}
             {"\n"}
-            Durante a criação de uma revisão você também pode associar uma anotação a mesma, para visualizá-la pressione o
-            ícone acima presente na revisão.
+            Durante a criação de uma revisão você também pode associar uma anotação, para visualizá-la pressione o
+            ícone acima no container da revisão desejada.
         </Text>
     </View>
     let Step6 = <View style={stylesSteps.container}> 
@@ -196,6 +196,18 @@ const ReviewsScreen = (props) => {
             {"\n"}
             Além disso, você pode associar, também, um arquivo de áudio na revisão, ao pressionar o ícone acima (presente no container)
             o player será inicializado.
+        </Text>
+    </View>
+    let Step7 = <View style={stylesSteps.container}> 
+        <Icon2 name="collections" size={40} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Visualizar imagem associada!
+            {"\n"}
+            {"\n"}
+            Por fim, você pode associar uma imagem à uma revisão e ao pressionar o ícone acima no container da revisão a foto pode ser visualizada.
+            {"\n"}
+            {"\n"}
+            Dica: Tire foto de seu resumo, fluxograma ou mapa mental e anexe nas revisões do App.
         </Text>
     </View>
     
@@ -505,7 +517,7 @@ const ReviewsScreen = (props) => {
                     <ScreenTutorial 
                         handleCloseModal={() => setHandleOpenTutorialModal(false)}
 
-                        steps={[Step0, Step1, Step2, Step3, Step4, Step5, Step6]}
+                        steps={[Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7]}
                     />
                     : null
                 }
@@ -542,8 +554,9 @@ const ReviewsScreen = (props) => {
             </View>
             <View style={styles.adBox}>
                 <BannerAd
+                    // unitId={"ca-app-pub-9301871566936075/8490963413"}
                     unitId={TestIds.BANNER}
-                    size={BannerAdSize.FULL_BANNER}
+                    size={BannerAdSize.ADAPTIVE_BANNER}
                     requestOptions={{
                         requestNonPersonalizedAdsOnly: true
                     }}

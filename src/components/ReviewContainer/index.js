@@ -33,7 +33,7 @@ const ReviewContainer = (props) => {
                     <Text style={styles.titleReview} numberOfLines={1}>{props.data.title}</Text>
                 </View>
                 {
-                    (delayed && props.haveDelay) && <Icon name="date-range" size={22} color="red" style={styles.alertIcon} />
+                    (delayed && props.haveDelay) && <Icon name="date-range" size={22} color="#cc0000" style={styles.alertIcon} />
                 }
             </View>
             <View style={styles.optionsBox}>

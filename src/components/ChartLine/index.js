@@ -88,7 +88,7 @@ const ChartLine = (props) => {
                 chartConfig={{
                     backgroundColor: "#FFF",
                     backgroundGradientFrom: "#FFF",
-                    backgroundGradientTo: "#FCFCFC",
+                    backgroundGradientTo: "#FFF",
                     decimalPlaces: 0, // optional, defaults to 2dp
                     color: (opacity = 1) => `rgba(231, 78, 54, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(48, 48, 48, ${opacity})`,

@@ -40,7 +40,7 @@ const AppRoutes = () => {
                     component={HomeScreen} 
                     options={{
                         headerShown: true,
-                        header: () => <Header title="MENU FREE" showLogout color="#FCFCFC" />
+                        header: () => <Header title="MENU" showLogout color="#FCFCFC" />
                     }}
                 />
                 <Screen 
@@ -82,14 +82,6 @@ const AppRoutes = () => {
                         headerShown: true,
                         header: () => <Header title="CONFIGURAÇÕES" color="#FCFCFC" />
                     }} 
-                />
-                <Screen 
-                    name="UpdatesScreen" 
-                    component={UpdatesScreen}
-                    options={{
-                        headerShown: true,
-                        header: () => <Header title="ATUALIZAÇÕES" color="#FCFCFC" />
-                    }}
                 />
                 <Screen 
                     name="DoubtsScreen" 

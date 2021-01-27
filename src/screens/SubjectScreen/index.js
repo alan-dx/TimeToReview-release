@@ -155,37 +155,41 @@ const SubjectScreen = (props) => {
 
 
     return (
-        <View style={styles.container}>
-            {data != null && 
-                <FlatList
-                    style={styles.flatlist}
-                    data={data}
-                    keyExtractor={ item => item._id}
-                    renderItem={({item}) => <SubjectContainer onPressEdit={() => handlePressGoToEditScreen(item)} onPressDelete={() => handlePressDeleteSubject(item)} data={item} />}
-                />
-            }
-            <FloatAddButton onPress={handlePressGoToAddSubjectScreen}/>
-            {handleOpenTutorialModal ? 
-                <ScreenTutorial 
-                    steps={[Step0, Step1, Step2]}
-                    handleCloseModal={() => setHandleOpenTutorialModal(false)}
-                    />    
-                : null
-            }
-            {/* <View style={styles.adBox}>
+        <>
+            <View style={styles.container}>
+                {data != null && 
+                    <FlatList
+                        style={styles.flatlist}
+                        data={data}
+                        keyExtractor={ item => item._id}
+                        renderItem={({item}) => <SubjectContainer onPressEdit={() => handlePressGoToEditScreen(item)} onPressDelete={() => handlePressDeleteSubject(item)} data={item} />}
+                    />
+                }
+                <FloatAddButton onPress={handlePressGoToAddSubjectScreen}/>
+                {handleOpenTutorialModal ? 
+                    <ScreenTutorial 
+                        steps={[Step0, Step1, Step2]}
+                        handleCloseModal={() => setHandleOpenTutorialModal(false)}
+                        />    
+                    : null
+                }
+            </View>
+            <View style={styles.adBox}>
                 <BannerAd
+                    // unitId={"ca-app-pub-9301871566936075/8490963413"}
                     unitId={TestIds.BANNER}
-                    size={BannerAdSize.FULL_BANNER}
+                    size={BannerAdSize.ADAPTIVE_BANNER}
                     requestOptions={{
-                    requestNonPersonalizedAdsOnly: true,}}
+                        requestNonPersonalizedAdsOnly: true
+                    }}
                     onAdLoaded={() => {
                         console.log('Advert loaded')
                     }}
                     onAdFailedToLoad={(error) => {
                     console.error('Advert failed to load: ', error);}}
                 />
-            </View> */}
-        </View>
+            </View>
+        </>
     )
     
 }

@@ -79,6 +79,21 @@ const styles = StyleSheet.create({
 
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    performanceChartIcon: {
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        borderColor: '#303030',
+        borderWidth: 2,
+
+        alignItems: "center",
+        justifyContent: 'center'
+    },
+    performanceChartIconLabel: {
+        fontFamily: 'Archivo-SemiBold',
+        color: '#FFF',
+        fontSize: 15
     }
     
 })

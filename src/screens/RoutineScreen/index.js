@@ -65,10 +65,10 @@ const RoutineScreen = (props) => {
             Container de Sequência.
             {"\n"}
             {"\n"}
-            É dessa forma que as sequências são visualizadas, interaga com o container para deletar ou editar uma sequência.
+            É dessa forma que as sequências são visualizadas, interaja com o container para deletar ou editar uma sequência.
             {"\n"}
             {"\n"}
-            Só será possível deletar uma sequência quando não houver revisões associadas a ela!
+            Obs: Só será possível deletar uma sequência quando não houver revisões associadas a ela!
         </Text>
     </View>
 
@@ -378,10 +378,12 @@ const RoutineScreen = (props) => {
             </View>
             <View style={styles.adBox}>
                 <BannerAd
+                    // unitId={"ca-app-pub-9301871566936075/8490963413"}
                     unitId={TestIds.BANNER}
-                    size={BannerAdSize.FULL_BANNER}
+                    size={BannerAdSize.ADAPTIVE_BANNER}
                     requestOptions={{
-                    requestNonPersonalizedAdsOnly: true,}}
+                        requestNonPersonalizedAdsOnly: true
+                    }}
                     onAdLoaded={() => {
                         console.log('Advert loaded')
                     }}
