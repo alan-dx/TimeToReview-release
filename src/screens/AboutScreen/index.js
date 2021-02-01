@@ -29,6 +29,12 @@ const AboutScreen = () => {
                 <View style={styles.aboutTextBox}>
                     <View style={styles.textMarker} />
                     <Text style={styles.aboutText}>
+                        <Text style={{fontWeight: "bold"}}>Público-alvo:</Text> Vestibulandos, concurseiros, universitários, profissionais da área educacional e estudantes em geral.
+                    </Text>
+                </View>
+                <View style={styles.aboutTextBox}>
+                    <View style={styles.textMarker} />
+                    <Text style={styles.aboutText}>
                         <Text style={{fontWeight: "bold"}}>Fundamento: </Text> A motivação para desenvolver essa aplicação é baseada na 
                         <Text style={{fontWeight: 'bold'}}> Curva do Esquecimento</Text>, um conceito apresentado pelo psicólogo alemão 
                         <Text style={{fontWeight: 'bold'}}> Hermann Ebbinghaus</Text>, em 1885. Em resumo, a curva pressupõe o declínio da retenção de 
@@ -42,10 +48,16 @@ const AboutScreen = () => {
                         <View >
                             <Text style={styles.titleChart}>Curva do Esquecimento - aproximação</Text>
                         </View>
-                        <CurveChartLine />
+                        <CurveChartLine data={[100,50,35,25,22,17]}/>
                         O gráfico acima demonstra que a retenção do conteúdo estudado chega próximo de 30% nas primeiras 24 horas. Dessa forma, revisar o contéudo periodicamente é
                         extremamente importante, pois, assim, o seu cérebro passará a considerar o conteúdo como uma "memória forte", diminuindo significativamente as chances de 
-                        esquecê-lo.
+                        esquecê-lo, aproximando a curva do esquecimento para algo assim:
+                        {"\n"}
+                        {"\n"}
+                        <View >
+                            <Text style={styles.titleChart}>Resultado das revisões constantes - aproximação</Text>
+                        </View>
+                        <CurveChartLine bezier data={[100,80,100,80,100,80]}/>
                     </Text>
                 </View>
             </ScrollView>

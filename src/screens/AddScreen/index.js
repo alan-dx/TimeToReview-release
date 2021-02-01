@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Alert, BackHandler } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Alert, BackHandler, ToastAndroid } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icon3 from 'react-native-vector-icons/MaterialIcons';
@@ -11,8 +11,12 @@ import AuthContext from '../../contexts/auth';
 import DocumentPicker from 'react-native-document-picker';
 import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'rn-fetch-blob';
-import ImagePicker from 'react-native-image-picker';
 import InputWLabelL from '../../components/InputWLabelL';
+import { InterstitialAd, TestIds, AdEventType } from '@react-native-firebase/admob';
+
+const interstitial = InterstitialAd.createForAdRequest("ca-app-pub-9301871566936075/9911463089", {//it is necessary to put this here 
+    requestNonPersonalizedAdsOnly: true
+});
 
 const AddScreen = (props) => {
 
@@ -29,18 +33,37 @@ const AddScreen = (props) => {
         align: 'left'
     })
     const [imageReview, setImageReview] = useState(null)
-    
+    const [loadedAd, setLoadedAd] = useState(false)
+
     const navigation = useNavigation();
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', () => {//to disable end review cycle on press hardware back button
-            console.log('asda')
 
             props.route.params.onGoBack(null)
             navigation.goBack()
             return true
         })
     }, [])
+
+    //InterstialAd Setup
+    useEffect(() => {
+        const eventListener = interstitial.onAdEvent(type => {
+            if (type === AdEventType.LOADED) {
+                console.log('carregou')
+                setLoadedAd(true);
+            }
+          });
+      
+          // Start loading the interstitial straight away
+          interstitial.load();
+      
+          // Unsubscribe from events on unmount
+          return () => {
+            eventListener();
+          };
+    }, [])
+    //InterstialAd Setup
 
     function handlePressGoBack() {
         props.route.params.onGoBack(null)
@@ -159,7 +182,7 @@ const AddScreen = (props) => {
                 
                 //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
 
-                setImageReview(url)
+                setImageReview([url])
                 
             } catch (err) {
                 if (DocumentPicker.isCancel(err)) {
@@ -172,7 +195,7 @@ const AddScreen = (props) => {
         }
     }
 
-    function handleCreateReview() {
+    async function handleCreateReview() {
         const currentDate = new Date()
         currentDate.setUTCHours(5,0,0,0)
 
@@ -189,6 +212,10 @@ const AddScreen = (props) => {
                 image: imageReview,
                 date: currentDate
             }).then((response) => {
+
+                if (loadedAd) {
+                    interstitial.show()
+                }
 
                 navigation.goBack()
                 setAllReviews([...allReviews, response.data])

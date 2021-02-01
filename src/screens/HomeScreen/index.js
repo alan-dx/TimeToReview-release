@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState, useEffect } from 'react';
-import { View, Text, Dimensions, Alert, Image, ToastAndroid, TouchableHighlight } from 'react-native';
+import { View, Text, Dimensions, Alert, Image, ToastAndroid, TouchableHighlight, Appearance } from 'react-native';
 
 import styles from './styles';
 import stylesSteps from './stylesSteps';
@@ -30,6 +30,12 @@ const HomeScreen = () => {
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
     const [handleOpenBePremiumModal, setHandleOpenBePremiumModal] = useState(false)
     const [handelShowTips0, setHandleShowTips0] = useState(false)
+
+    useEffect(() => {
+        if (Appearance.getColorScheme() == 'dark') {
+            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 1800)
+        }
+    }, [])
 
     useFocusEffect(
         useCallback(() => {
@@ -251,6 +257,7 @@ const HomeScreen = () => {
                             Obtenha a versão Premium do TimeToReview e tenha acesso aos seguintes benefícios: 
                             {'\n'}
                             {'\n'}
+                            {'\t'}{'\t'} - Associar múltiplas imagens na revisão;{'\n'}
                             {'\t'}{'\t'} - Remoção de todos os anúncios;{'\n'}
                             {'\t'}{'\t'} - Criação ilimitada de disciplinas;{'\n'}
                             {'\t'}{'\t'} - Criação ilimitada de sequências;{'\n'}

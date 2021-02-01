@@ -15,8 +15,6 @@ import EditSubjectScreen from '../screens/EditSubjectScreen';
 import PreLoadScreen from '../screens/PreLoadScreen';
 import AllReviewsScreen from '../screens/AllReviewsScreen';
 import Header from '../components/Header';
-import BePremiumScreen from '../screens/BePremiumScreen';
-import UpdatesScreen from '../screens/UpdatesScreen';
 import DoubtsScreen from '../screens/DoubtsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import VerifyPassScreen from '../screens/VerifyPassScreen';
@@ -122,14 +120,6 @@ const AppRoutes = () => {
                         headerShown: true,
                         header: () => <Header title="" color="#FCFCFC" />
                     })}
-                />
-                <Screen 
-                    name="BePremiumScreen" 
-                    component={BePremiumScreen}
-                    options={{
-                        headerShown: true,
-                        header: () => <Header title="SEJA PREMIUM" color="#FCFCFC" />
-                    }} 
                 />
                 <Screen 
                     name="AddScreen" 

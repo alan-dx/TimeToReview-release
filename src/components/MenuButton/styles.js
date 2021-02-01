@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     buttonTitle: {
         fontFamily: 'DancingScript-Bold',
         fontSize: 19,
-        marginTop: 10
+        marginTop: 10,
+        color: '#303030'
     }
 })
 

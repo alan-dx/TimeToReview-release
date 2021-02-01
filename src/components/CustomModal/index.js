@@ -32,7 +32,7 @@ const CustomModal = (props) => {
             visible={props.modalVisible}
         >
             <View style={styles.modalBox}>
-                <View style={[styles.modalCard, {height: props.modalCardHeight}]}>
+                <View style={[styles.modalCard, {minHeight: props.modalCardHeight || 300}]}>
                     <View style={styles.modalHeader}>
                         <TouchableHighlight style={{borderRadius: 20}} underlayColor="#F5F5F5" onPress={handleCancelButton}>
                             <Icon name="x" size={25} color="#303030" />

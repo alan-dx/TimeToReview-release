@@ -378,9 +378,9 @@ const RoutineScreen = (props) => {
             </View>
             <View style={styles.adBox}>
                 <BannerAd
-                    // unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    unitId={TestIds.BANNER}
-                    size={BannerAdSize.ADAPTIVE_BANNER}
+                    unitId={"ca-app-pub-9301871566936075/8490963413"}
+                    // unitId={TestIds.BANNER}
+                    size={BannerAdSize.BANNER}
                     requestOptions={{
                         requestNonPersonalizedAdsOnly: true
                     }}
@@ -390,6 +390,7 @@ const RoutineScreen = (props) => {
                     onAdFailedToLoad={(error) => {
                     console.error('Advert failed to load: ', error);}}
                 />
+                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
             </View>
         </>
     )

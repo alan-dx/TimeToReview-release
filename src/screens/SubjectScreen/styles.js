@@ -19,8 +19,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Archivo-Medium',
         color: '#FFFFFF',
         fontSize: 14,
+        color: '#303030',
+        textAlign: 'center',
 
-        textAlign: 'center'
+        zIndex: -1,
+        position: 'absolute'
     }
 })
 

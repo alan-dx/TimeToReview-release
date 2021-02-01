@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import { LineChart } from "react-native-chart-kit";
-import Svg, { Text, Circle} from 'react-native-svg';
+import Svg, { Text, Circle } from 'react-native-svg';
 
 const ChartLine = (props) => {
 

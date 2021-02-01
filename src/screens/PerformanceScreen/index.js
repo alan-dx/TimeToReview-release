@@ -53,7 +53,10 @@ const PerformanceScreen = () => {
             </View>
         </View>
         <Text style={stylesSteps.desciptionText}>
-            Você pode interagir com os gráficos na tela de desempenho para obter informações mais detalhadas.
+            Você pode interagir com as informações gráficas na tela de desempenho para obter informações mais detalhadas, basta pressionar os indicadores dos gráficos.
+            {"\n"}
+            {"\n"}
+            Tais informações serão resetadas todo início de semana (segunda-feira) ou após um período de sete dias ou mais sem utilizar o aplicativo.
         </Text>
     </View>
 
@@ -180,7 +183,7 @@ const PerformanceScreen = () => {
                 <View style={styles.performanceItemBox}>
                     <Text style={styles.textBold}>DESEMPENHO DO DIA</Text>
                     <View style={styles.lineChartPieBox} />
-                    <Text style={styles.subText}>Você concluiu {dataReviewsChart[new Date().getDay()]} revisões hoje! (Média = {averageReviews} revisões) </Text>
+                    <Text style={styles.subText}>Você concluiu {dataReviewsChart[new Date().getDay()]} {dataReviewsChart[new Date().getDay()] == 1 ? 'revisão' : 'revisões'} hoje! (Média = {averageReviews} {averageReviews == 1 ? 'revisão' : 'revisões'}) </Text>
                     <ChartOverall
                         data={{
                             reviewsAverage: averageReviews,
@@ -191,7 +194,7 @@ const PerformanceScreen = () => {
                 <View style={styles.performanceItemBox}>
                     <Text style={styles.textBold}>REVISÕES/MATÉRIA</Text>
                     <View style={styles.lineChartPieBox} />
-                    <Text style={styles.subText}>{allReviews.length} revisões cadastradas</Text>
+                    <Text style={styles.subText}>{allReviews.length} {allReviews.length == 1 ? 'revisão' : 'revisões'} cadastradas</Text>
                     <ChartPiee data={subjects} />
                 </View>
                 
@@ -199,13 +202,13 @@ const PerformanceScreen = () => {
                     {/* Melhorar o cálculo das médias */}
                     <Text style={styles.textBold}>REVISÕES/DIA</Text>
                     <View style={styles.lineChartPieBox} />
-                    <Text style={styles.subText}>Média diária: {averageReviews} revisões</Text>
+                    <Text style={styles.subText}>Média diária: {averageReviews} {averageReviews == 1 ? 'revisão' : 'revisões'}</Text>
                     <ChartLine data={performance} height={300} />{/* For some reason, pass dataReviewsChart here cause a error */}
                 </View>
                 <View style={styles.performanceItemBox}>
                     <Text style={styles.textBold}>MINUTOS REVISADOS/DIA</Text>
                     <View style={styles.lineChartPieBox} />
-                    <Text style={styles.subText}>Média diária: {averageCalculate(averageChronometer)} minutos</Text>
+                    <Text style={styles.subText}>Média diária: {averageCalculate(averageChronometer)} {averageCalculate(averageChronometer) == 1 ? 'minuto' : 'minutos'}</Text>
                     <ChartBar data={dataChronometerChart} />
                 </View>
             </ScrollView>

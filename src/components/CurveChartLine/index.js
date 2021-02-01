@@ -20,14 +20,7 @@ const CurveChartLine = (props) => {
                     labels: ["0h", "1h", "24h", "48h", "6d", "31d"],
                     datasets: [ 
                         {
-                            data: [
-                                100,
-                                50,
-                                35,
-                                25,
-                                22,
-                                17
-                            ]
+                            data: props.data
                       }
                     ],
                 }}
@@ -72,9 +65,9 @@ const CurveChartLine = (props) => {
                     });
                 }}
                 chartConfig={{
-                    backgroundColor: "#FFFF",
-                    backgroundGradientFrom: "#FFF",
-                    backgroundGradientTo: "#FFF",
+                    backgroundColor: "#FCFCFC",
+                    backgroundGradientFrom: "#FCFCFC",
+                    backgroundGradientTo: "#FCFCFC",
                     decimalPlaces: 0, // optional, defaults to 2dp
                     color: (opacity = 1) => `rgba(231, 78, 54, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(48, 48, 48, ${opacity})`,
@@ -87,6 +80,7 @@ const CurveChartLine = (props) => {
                         stroke: "#303030"
                     }
                 }}
+                bezier={props.bezier}
                 style={{marginVertical: 5}}
             />
         </View>

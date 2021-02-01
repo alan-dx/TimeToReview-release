@@ -19,6 +19,7 @@ import admob, { MaxAdContentRating } from '@react-native-firebase/admob';
 const App: () => React$Node = () => {
 
   useEffect(() => {
+      //admob setup
       admob()
       .setRequestConfiguration({
         // Update all future requests suitable for parental guidance
@@ -33,6 +34,8 @@ const App: () => React$Node = () => {
         // Request config successfully set!
         console.log('suceess')
       });
+      //admob setup
+
   }, [])
 
   return (

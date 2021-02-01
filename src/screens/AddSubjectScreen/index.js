@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -8,6 +8,11 @@ import ColorPicker from '../../components/ColorPicker';
 import api from '../../services/api';
 import AuthContext from '../../contexts/auth';
 import InputWLabelL from '../../components/InputWLabelL';
+import { InterstitialAd, TestIds, AdEventType } from '@react-native-firebase/admob';
+
+const interstitial = InterstitialAd.createForAdRequest("ca-app-pub-9301871566936075/9911463089", {//it is necessary to put this here 
+    requestNonPersonalizedAdsOnly: true
+});
 
 const AddSubjectScreen = (props) => {
 
@@ -16,6 +21,26 @@ const AddSubjectScreen = (props) => {
     const { logoutContext } = useContext(AuthContext)
     const [titleSubject, setTitleSubject] = useState('')
     const [markerSubject, setMarkerSubject] = useState('')
+    const [loadedAd, setLoadedAd] = useState(false)
+
+    //InterstialAd Setup
+    useEffect(() => {
+        const eventListener = interstitial.onAdEvent(type => {
+            if (type === AdEventType.LOADED) {
+                console.log('carregou')
+                setLoadedAd(true);
+            }
+            });
+        
+            // Start loading the interstitial straight away
+            interstitial.load();
+        
+            // Unsubscribe from events on unmount
+            return () => {
+            eventListener();
+            };
+    }, [])
+    //InterstialAd Setup
 
     function handlePressGoBack() {
         navigation.goBack()
@@ -30,6 +55,11 @@ const AddSubjectScreen = (props) => {
                 title: titleSubject,
                 marker: markerSubject
             }).then((response) => {
+
+                if (loadedAd) {
+                    interstitial.show()
+                }
+
                 props.route.params.onGoBack(response.data)
                 navigation.goBack()
             }).catch((err) => {

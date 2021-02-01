@@ -18,14 +18,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#FCFCFC',
 
         alignItems: 'center',
+        alignSelf: 'center',
         justifyContent: 'center'
     },
     adBoxLabel: {
         fontFamily: 'Archivo-Medium',
         color: '#FFFFFF',
         fontSize: 14,
+        color: '#303030',
+        textAlign: 'center',
 
-        textAlign: 'center'
+        zIndex: -1,
+        position: 'absolute'
     }
 })
 

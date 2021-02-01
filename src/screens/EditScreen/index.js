@@ -258,7 +258,7 @@ const EditScreen = (props) => {
                 
                 //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
 
-                setImageReview(url)
+                setImageReview([url])
                 
             } catch (err) {
                 if (DocumentPicker.isCancel(err)) {

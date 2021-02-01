@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     },
     modalInfoBox: {
         padding: 8,
-        flex: 1
+        flex: 1,
     },
     modalInfoTitle: {
         fontWeight: 'bold',

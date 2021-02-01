@@ -12,7 +12,7 @@ const PreLoadScreen = () => {
         loadServerData().then((response) => {
             
             // const reminderTime = new Date(response.data.reminderTime)
-            console.log('sub',response.data.reviews)
+            // console.log('sub',response.data.reviews)
 
             setUser({
                 name: response.data.name,
@@ -43,8 +43,6 @@ const PreLoadScreen = () => {
                 index: 0,
                 routes: [{name: "HomeScreen"}]
             })
-
-            console.log(response.data.reminderTime)
 
         }).catch((err) => {
             alert('Sessão expirada!')

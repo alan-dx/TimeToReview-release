@@ -170,7 +170,7 @@ const ReviewsScreen = (props) => {
         </Text>
     </View>
     let Step4 = <View style={stylesSteps.container}> 
-        <Icon2 name="date-range" size={40} color="red" />
+        <Icon2 name="date-range" size={40} color="#cc0000" />
         <Text style={stylesSteps.desciptionText}>
             Revisão em atraso!
             {"\n"}
@@ -453,7 +453,7 @@ const ReviewsScreen = (props) => {
             if(response["android.permission.READ_EXTERNAL_STORAGE"] == 'denied') {
                 alert('Precisamos dessa permissão para apresentar a imagem associada. Por favor realize o processo novamente!')
             } else {
-                setImageReview(image)
+                setImageReview(image[0])
                 setHandleOpenImageModal(true)
             }
         }).catch((err) => {
@@ -554,9 +554,9 @@ const ReviewsScreen = (props) => {
             </View>
             <View style={styles.adBox}>
                 <BannerAd
-                    // unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    unitId={TestIds.BANNER}
-                    size={BannerAdSize.ADAPTIVE_BANNER}
+                    unitId={"ca-app-pub-9301871566936075/8490963413"}
+                    // unitId={TestIds.BANNER}
+                    size={BannerAdSize.BANNER}
                     requestOptions={{
                         requestNonPersonalizedAdsOnly: true
                     }}
@@ -566,6 +566,7 @@ const ReviewsScreen = (props) => {
                     onAdFailedToLoad={(error) => {
                     console.error('Advert failed to load: ', error);}}
                 />
+                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
             </View>
         </>
     )

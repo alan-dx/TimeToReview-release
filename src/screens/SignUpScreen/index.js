@@ -82,23 +82,37 @@ const LoginScreen = () => {
             return alert("As senhas não conferem! Verifique e tente novamente.")
         }
         if (password && cPassword && name && email) {
-            
-            if (validationEmail(email)) {
-                signUpContext({name, email, password})
-                navigation.goBack()
+            if (checkBoxIsSelected) {
+                if (validationEmail(email)) {
+                    signUpContext({name, email, password})
+                    navigation.goBack()
+                } else {
+                    Alert.alert(
+                        "Email Inválido",
+                        "Por favor insira um email válido.",
+                        [
+                          {
+                            text: "Ok",
+                            onPress: () => {},
+                            style: "cancel"
+                          },
+                        ],
+                        { cancelable: false }
+                    )
+                }
             } else {
                 Alert.alert(
-                    "Email Inválido",
-                    "Por favor insira um email válido.",
+                    "Termos de Uso e Política de Privacidade!",
+                    "Você precisa concordar com nossos Termos de Uso e Política de Privacidade para continuar.",
                     [
                       {
-                        text: "Ok",
-                        onPress: () => {},
+                        text: "Ok!",
+                        onPress: () => console.log("Cancel Pressed"),
                         style: "cancel"
-                      },
+                      }
                     ],
                     { cancelable: false }
-                )
+                  );
             }
         } else {
             alert("Você precisa preencher todos os campos antes de continuar!")
@@ -163,7 +177,7 @@ const LoginScreen = () => {
                         style={styles.checkbox}
                     />
                     <Text style={styles.label}>Concordo com a
-                        <Text onPress={() => Linking.openURL("https://google.com")} style={{fontWeight: 'bold', textDecorationLine: 'underline'}}> política de privacidade e termos de uso</Text>
+                        <Text onPress={() => Linking.openURL("http://10.0.0.14:3333/privacyPolicy")} style={{fontWeight: 'bold', textDecorationLine: 'underline'}}> política de privacidade e termos de uso</Text>
                     </Text>
                 </View>
                 <View style={styles.buttonBox}>

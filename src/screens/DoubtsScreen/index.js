@@ -14,6 +14,7 @@ const DoubtsScreen = (props) => {
             info: 'A sua foto de perfil e os áudios/imagens associados à revisões que você adiciona no aplicativo são mantidos apenas na memória de seu dispositivo,'+
             ' tais arquivos não trafegam para nossos servidores.',
             key: 0,
+            height: 150
         },
         {
             title: 'Como é realizado o cálculo da próxima revisão?',
@@ -23,18 +24,20 @@ const DoubtsScreen = (props) => {
             'seguirá a seguinte sequência de datas: 20/10 (criação) => 21/10 (1) => 24/10 (3) => 29/10 (5) => 04/11 (5). Observe que '+
             'quando o último número da sequênica do ciclo é alcançado todas as datas subsequentes são calculadas a partir dele.',
             key: 1,
+            height: 260
         },
         {
-            title: 'Quando sairá as novas funções do App?',
+            title: 'Haverá novas funcionalidades no App?',
             info: 'As novas funcionalidades do aplicativo já estão em desenvolvimento e em breve estarão disponíveis. Nossa equipe é pequena, mas esta trabalhando constantemente, '+
             'portanto pedimos sua compreensão e em breve seu aplicativo será atualizado.',
-            key: 2
+            key: 2,
+            height: 160
         },
         {
-            title: 'Por que o App necessita de internet?',
-            info: 'Para funcionar corretamente nosso aplicativo exige uma conexão com a internet, pois é assim que armazenamos e gerenciamos '+
-            'suas revisões, sequências, disciplinas e dados em geral.',
-            key: 3
+            title: 'Quem gerencia as compras no App?',
+            info: 'Todo o sistema de pagamentos, compras e assinaturas no aplicativo é gerido pela Google Play Store.',
+            key: 3,
+            height: 120
         },
         {
             title: 'Segurança da conta e privacidade',
@@ -42,6 +45,7 @@ const DoubtsScreen = (props) => {
             'evitamos solicitar dados sensíveis aos nossos usuários e buscamos manter a máxima transparência acerca de como seus dados serão utilizados e armazenados. '+
             'Você pode obter mais informações em nossa Política de Privacidade e Termos de Uso (Verifique a sessão "Política de privacidade" no menu de configurações).',
             key: 4,
+            height: 220
         },
         {
             title: 'As revisões são salvas na nuvem?',
@@ -50,6 +54,14 @@ const DoubtsScreen = (props) => {
             'baixar essa versão do App novamente. Entretanto, áudios e imagens associados à revisões não podem ser recuperados, uma vez que esses dados não trafegam '+
             'para nossos servidores por uma questão de nossa Política de Privacidade.',
             key: 5,
+            height: 260
+        },
+        {
+            title: '"Aplicativo em Dark Mode"',
+            info: 'Se você utiliza o Dark Mode (Tema escuro) em seu dispositivo o aplicativo também ira adequar as cores para se adaptar ao tema,'+
+            ' entretanto, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, porém, isso não interfere no uso da aplicação.',
+            key: 6,
+            height: 190
         },
     ])
 
@@ -77,8 +89,8 @@ const DoubtsScreen = (props) => {
                     modalVisible={handleDoubtModal}
                     handleCloseModalButton={handleCloseDoubtModal}
                     modalTitle="INFORMAÇÕES"
-                    modalCardHeight={280}
                     doNotShowCheckButton={true}
+                    modalCardHeight={infoData[selectInfoData].height}
                 >
                     <View style={styles.modalInfoBox}>
                         <View style={{flexDirection: 'row'}}>

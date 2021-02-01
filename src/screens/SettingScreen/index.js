@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { View, Image, Text, Linking, Alert, ToastAndroid, ScrollView, TouchableHighlight, PermissionsAndroid } from 'react-native';
+import { View, Image, Text, Linking, Alert, ToastAndroid, ScrollView, TouchableHighlight, PermissionsAndroid, Appearance } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/AntDesign';
@@ -35,8 +35,6 @@ const SettingScreen = (props) => {
             let source = await AsyncStorage.getItem("@TTR:profilephoto")
             setFilePath(JSON.parse(source))
         }
-
-        console.log(user.reminderTime, new Date('1899-12-31T13:01:00.000Z'))
 
         loadStorageProfilePhoto()
     }, [])
@@ -282,20 +280,20 @@ const SettingScreen = (props) => {
                     showsVerticalScrollIndicator
                     ref={menuScroll}
                 >
+                    <RectButton style={styles.optionContainer} 
+                        onPress={() => {
+                            Linking.openURL("http://10.0.0.14:3333/privacyPolicy")
+                        }}
+                    >
+                        <Text style={styles.optionText}>Termos e Política de Privacidade</Text>
+                        <Icon name="chevron-right" size={20} color="#60c3eb" />
+                    </RectButton>
                     <RectButton style={styles.optionContainer} onPress={handleResetCharts}>
                         <Text style={styles.optionText}>Zerar dados de desempenho</Text>
                         <Icon name="chevron-right" size={20} color="#60c3eb" />
                     </RectButton>
                     <RectButton style={styles.optionContainer} onPress={() => setHandleTimeModal(true)}>
                         <Text style={styles.optionText}>Definir horário do lembrete</Text>
-                        <Icon name="chevron-right" size={20} color="#60c3eb" />
-                    </RectButton>
-                    <RectButton style={styles.optionContainer} 
-                        onPress={() => {
-                            ToastAndroid.show('Em breve', 600)
-                        }}
-                    >
-                        <Text style={styles.optionText}>Política de Privacidade</Text>
                         <Icon name="chevron-right" size={20} color="#60c3eb" />
                     </RectButton>
                     <RectButton style={styles.optionContainer} 
