@@ -33,7 +33,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         if (Appearance.getColorScheme() == 'dark') {
-            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 1800)
+            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 2400)
         }
     }, [])
 
@@ -114,6 +114,19 @@ const HomeScreen = () => {
             {"\n"}
             {"\n"}
             Para obter mais informações verifique a sessão "Seja Premium" no Menu.
+        </Text>
+    </View>
+
+    let Step5 = <View style={stylesSteps.container}>
+        <Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Aplicativo em Dark Mode!
+            {"\n"}
+            {"\n"}
+            Se você utiliza o Dark Mode (Tema Escuro) em seu dispositivo, as cores do aplicativo serão adaptadas pelo próprio aparelho para adequá-lo ao tema.
+            {"\n"}
+            {"\n"}
+            Cabe ressaltar que, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, gerando algumas inconsistências. Porém, isso não interfere no uso da aplicação.
         </Text>
     </View>
 
@@ -238,7 +251,7 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={[Step0, Step1, Step2, Step3, Step4]} 
+                steps={[Step0, Step1, Step2, Step3, Step4, Step5]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null

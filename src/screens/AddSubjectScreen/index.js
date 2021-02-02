@@ -91,11 +91,11 @@ const AddSubjectScreen = (props) => {
             </View>
             <View style={styles.main}>
                 <InputWLabelL
-                    labelTitle="Título da Revisão"
+                    labelTitle="Título da Disciplina"
                     value={titleSubject}
                     secureTextEntry={false}
                     onChangeText={setTitleSubject}
-                    placeholder="Ex.: EDO de Bernoulli"
+                    placeholder="Ex.: Cálculo III"
                     textAlign="center"
                 />
                 <View style={styles.inputBox}>
