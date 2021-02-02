@@ -100,7 +100,7 @@ const AddSubjectScreen = (props) => {
                 />
                 <View style={styles.inputBox}>
                     <View style={styles.labelBoxR}>
-                        <Text style={styles.label}>Cor da marcação</Text>
+                        <Text style={styles.label}>Cor do Marcador</Text>
                         <View style={styles.labelFrame} />
                     </View>
                     <ColorPicker markerSubject={markerSubject} setMarkerSubject={setMarkerSubject} />
