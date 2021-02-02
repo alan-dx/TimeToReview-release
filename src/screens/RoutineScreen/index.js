@@ -11,7 +11,6 @@ import api from '../../services/api';
 import ScreenTutorial from '../../components/ScreenTutorial';
 import AsyncStorage from '@react-native-community/async-storage';
 import CustomModal from '../../components/CustomModal';
-import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
 
 const RoutineScreen = (props) => {
 
@@ -88,23 +87,9 @@ const RoutineScreen = (props) => {
     //User tutorial
 
     function handleOpenAddModal() {
-        if (routines.length < 3) {
-            setSequenceRoutine('')
-            setModalAddVisible(true)
-        } else {
-            Alert.alert(
-                "Ops...",
-                "Você só pode criar até três sequências de revisão na versão gratuita do TimeToReview. Caso deseje criar sequências ilimitadamente, adquira a versão Premium.",
-                [
-                  {
-                    text: "Ok",
-                    onPress: () => {},
-                    style: "cancel"
-                  },
-                ],
-                { cancelable: false }
-              );
-        }
+        setSequenceRoutine('')
+        setModalAddVisible(true)
+
     }
 
     function handleCloseAddModal() {
@@ -375,22 +360,6 @@ const RoutineScreen = (props) => {
                 /> 
                     : null
                 }
-            </View>
-            <View style={styles.adBox}>
-                <BannerAd
-                    unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    // unitId={TestIds.BANNER}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{
-                        requestNonPersonalizedAdsOnly: true
-                    }}
-                    onAdLoaded={() => {
-                        console.log('Advert loaded')
-                    }}
-                    onAdFailedToLoad={(error) => {
-                    console.error('Advert failed to load: ', error);}}
-                />
-                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
             </View>
         </>
     )

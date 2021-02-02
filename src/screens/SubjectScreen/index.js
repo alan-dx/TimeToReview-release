@@ -11,7 +11,6 @@ import api from '../../services/api';
 import ScreenTutorial from '../../components/ScreenTutorial';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
 
 const SubjectScreen = (props) => {
 
@@ -72,24 +71,10 @@ const SubjectScreen = (props) => {
     const navigation = useNavigation()
 
     function handlePressGoToAddSubjectScreen() {
-        if (subjects.length < 8) {
-            navigation.navigate("AddSubjectScreen", {
-                onGoBack: handleUpdateDataOnAdd
-            })
-        } else {
-            Alert.alert(
-                "Ops...",
-                "Você só pode criar até oito disciplinas na versão gratuita do TimeToReview. Caso deseje criar disciplinas ilimitadamente, adquira a versão Premium.",
-                [
-                  {
-                    text: "Ok",
-                    onPress: () => {},
-                    style: "cancel"
-                  },
-                ],
-                { cancelable: false }
-              );
-        }
+        navigation.navigate("AddSubjectScreen", {
+            onGoBack: handleUpdateDataOnAdd
+        })
+
     }
 
     function handleUpdateDataOnAdd(passData) {
@@ -173,22 +158,6 @@ const SubjectScreen = (props) => {
                         />    
                     : null
                 }
-            </View>
-            <View style={styles.adBox}>
-                <BannerAd
-                    unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    // unitId={TestIds.BANNER}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{
-                        requestNonPersonalizedAdsOnly: true
-                    }}
-                    onAdLoaded={() => {
-                        console.log('Advert loaded')
-                    }}
-                    onAdFailedToLoad={(error) => {
-                    console.error('Advert failed to load: ', error);}}
-                />
-                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
             </View>
         </>
     )

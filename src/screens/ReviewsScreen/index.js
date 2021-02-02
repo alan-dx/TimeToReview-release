@@ -18,7 +18,6 @@ import TrackPlayer from 'react-native-track-player';
 import PlayerModal from '../../components/PlayerModal';
 import NotesModal from '../../components/NotesModal';
 import ImageModal from '../../components/ImageModal';
-import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
 
 const ReviewsScreen = (props) => {
 
@@ -38,7 +37,6 @@ const ReviewsScreen = (props) => {
     const [trackPlayer, setTrackPlayer] = useState('')
     const [notesToShow, setNotesToShow] = useState(null)
     const [imageReview, setImageReview] = useState('')
-    const [adLabel, setAdLabel] = useState(true)
 
     const cycleFlatList = useRef(null)
 
@@ -551,22 +549,6 @@ const ReviewsScreen = (props) => {
                         image={imageReview}
                     /> : null
                 }
-            </View>
-            <View style={styles.adBox}>
-                <BannerAd
-                    unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    // unitId={TestIds.BANNER}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{
-                        requestNonPersonalizedAdsOnly: true
-                    }}
-                    onAdLoaded={() => {
-                        console.log('Advert loaded')
-                    }}
-                    onAdFailedToLoad={(error) => {
-                    console.error('Advert failed to load: ', error);}}
-                />
-                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
             </View>
         </>
     )

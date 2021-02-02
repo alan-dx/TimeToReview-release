@@ -73,17 +73,17 @@ const EditSubjectScreen = (props) => {
             </View>
             <View style={styles.main}>
                 <InputWLabelL
-                    labelTitle="Título da Revisão"
+                    labelTitle="Título da Disciplina"
                     value={titleSubject}
                     secureTextEntry={false}
                     onChangeText={setTitleSubject}
-                    placeholder="Ex.: EDO de Bernoulli"
+                    placeholder="Ex.: Cálculo III"
                     textAlign="center"
                     lineColor="#e74e36"
                 />
                 <View style={styles.inputBox}>
                     <View style={styles.labelBoxR}>
-                        <Text style={styles.label}>Cor do disciplina</Text>
+                        <Text style={styles.label}>Cor do Marcador</Text>
                         <View style={styles.labelFrame} />
                     </View>
                     <ColorPicker markerSubject={markerSubject} setMarkerSubject={setMarkerSubject} />

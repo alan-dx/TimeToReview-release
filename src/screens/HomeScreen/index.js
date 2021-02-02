@@ -13,7 +13,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import ScreenTutorial from '../../components/ScreenTutorial';
 import logoImage from '../../assets/images/icons/logo.png';
-import CustomModal from '../../components/CustomModal';
+import TipsModal from '../../components/TipsModal';
 
 const HomeScreen = () => {
 
@@ -28,7 +28,7 @@ const HomeScreen = () => {
     const [isLoading] = useState(false)
     const [dataChart, setData] = useState(performance)
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
-    const [handleOpenBePremiumModal, setHandleOpenBePremiumModal] = useState(false)
+    const [handleOpenTipsModal, setHandleOpenTipsModal] = useState(false)
     const [handelShowTips0, setHandleShowTips0] = useState(false)
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const HomeScreen = () => {
             <Image source={logoImage} style={{width: 170, height: 170}} />
         </View>
         <Text style={stylesSteps.desciptionText}>
-            Seja bem-vindo ao TimeToReview!
+            Seja bem-vindo(a) ao TimeToReview Premium!
             {"\n"}
             {"\n"}
             Esse é o menu do aplicativo, onde você poderá navegar pelas telas e acessar as funções do App.
@@ -117,6 +117,20 @@ const HomeScreen = () => {
         </Text>
     </View>
 
+let Step5 = <View style={stylesSteps.container}>
+<Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
+<Text style={stylesSteps.desciptionText}>
+    Aplicativo em Dark Mode!
+    {"\n"}
+    {"\n"}
+    Se você utiliza o Dark Mode (Tema Escuro) em seu dispositivo, as cores do aplicativo serão adaptadas pelo próprio aparelho para adequá-lo ao tema.
+    {"\n"}
+    {"\n"}
+    Cabe ressaltar que, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, gerando algumas inconsistências. Porém, isso não interfere no uso da aplicação.
+</Text>
+</View>
+
+
     async function checkIfItsTheFirstTime() { //See useFocusEffect
         const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeHomeScreen")
         console.log('first', firstTimeOnScreen)
@@ -171,14 +185,24 @@ const HomeScreen = () => {
         }
     }
 
-    async function handleOpenBePremium() {
+    async function handleShowTipsModal() {
 
-        setHandleOpenBePremiumModal(true)
+        const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeOpenTips")
+        
+        if (!firstTimeOnScreen) {
+            await AsyncStorage.setItem('@TTR:firstTimeOpenTips', 'true')
+            setHandleShowTips0(true)
+            setHandleOpenTipsModal(true)
+        } else {
+            setHandleShowTips0(false)
+            setHandleOpenTipsModal(true)
+        }
 
     }
 
-    async function handleCloseBePremium() {
-        setHandleOpenBePremiumModal(false)
+    async function handleCloseTipsModal() {
+        console.log('asd')
+        setHandleOpenTipsModal(false)
     }
 
     function handleClickGoToAllReviewsScreen() {
@@ -225,8 +249,8 @@ const HomeScreen = () => {
                     </MenuButton>
                 </View>
                 <View style={styles.menuItemBox}>
-                    <MenuButton color="#FFF" textColor="#303030" onPress={handleOpenBePremium} title="Seja Premium">
-                        <Icon2 name="trending-up" size={28} color="#303030" />
+                    <MenuButton color="#FFF" textColor="#303030" onPress={handleShowTipsModal} title="Dicas de Estudo">
+                        <Icon name="bulb1" size={28} color="#303030" />
                     </MenuButton>
                 </View>
                 <View style={styles.menuItemBox}>
@@ -238,38 +262,18 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={[Step0, Step1, Step2, Step3, Step4]} 
+                steps={[Step0, Step1, Step2, Step3, Step4, Step5]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null
         }
         {
-            handleOpenBePremiumModal ? 
-                <CustomModal
-                    modalVisible={handleOpenBePremiumModal}
-                    handleCloseModalButton={handleCloseBePremium}
-                    modalCardHeight={300}
-                    modalTitle="SEJA PREMIUM"
-                    doNotShowCheckButton
-                >
-                    <View style={styles.bePremiumModalInfoBox}>
-                        <Text style={styles.bePremiumModalInfoText}>
-                            Obtenha a versão Premium do TimeToReview e tenha acesso aos seguintes benefícios: 
-                            {'\n'}
-                            {'\n'}
-                            {'\t'}{'\t'} - Associar múltiplas imagens na revisão;{'\n'}
-                            {'\t'}{'\t'} - Remoção de todos os anúncios;{'\n'}
-                            {'\t'}{'\t'} - Criação ilimitada de disciplinas;{'\n'}
-                            {'\t'}{'\t'} - Criação ilimitada de sequências;{'\n'}
-                            {'\t'}{'\t'} - Dicas de estudo;{'\n'}
-                        </Text>
-                    </View>
-                    <TouchableHighlight style={styles.bePremiumModalCustomButton} underlayColor={"#72c3eb"} onPress={() => {
-                        ToastAndroid.show('Em breve', 600)
-                    }}>
-                        <Text style={styles.bePremiumModalCustomButtonText}>VAMOS-LÁ!</Text>
-                    </TouchableHighlight>
-                </CustomModal> : null
+            handleOpenTipsModal ? 
+                    <TipsModal
+                        handleCloseModal={handleCloseTipsModal}
+                        handelShowTips0={handelShowTips0}
+                /> :
+                null
         }
     </>
 
