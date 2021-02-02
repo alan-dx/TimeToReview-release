@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Alert, BackHandler, ToastAndroid } from 'react-native';
 import styles from './styles';
+import stylesSteps from './stylesSteps';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Icon2 from 'react-native-vector-icons/Entypo';
 import Icon3 from 'react-native-vector-icons/MaterialIcons';
 import { BorderlessButton } from "react-native-gesture-handler"
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +14,8 @@ import DocumentPicker from 'react-native-document-picker';
 import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'rn-fetch-blob';
 import InputWLabelL from '../../components/InputWLabelL';
+import AsyncStorage from '@react-native-community/async-storage';
+import ScreenTutorial from '../../components/ScreenTutorial';
 import { InterstitialAd, TestIds, AdEventType } from '@react-native-firebase/admob';
 
 const interstitial = InterstitialAd.createForAdRequest("ca-app-pub-9301871566936075/9911463089", {//it is necessary to put this here 
@@ -33,9 +37,29 @@ const AddScreen = (props) => {
         align: 'left'
     })
     const [imageReview, setImageReview] = useState(null)
+    const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
+    const navigation = useNavigation();
+
     const [loadedAd, setLoadedAd] = useState(false)
 
-    const navigation = useNavigation();
+    //InterstialAd Setup
+    useEffect(() => {
+        const eventListener = interstitial.onAdEvent(type => {
+            if (type === AdEventType.LOADED) {
+                console.log('carregou')
+                setLoadedAd(true);
+            }
+            });
+        
+            // Start loading the interstitial straight away
+            interstitial.load();
+        
+            // Unsubscribe from events on unmount
+            return () => {
+            eventListener();
+            };
+    }, [])
+    //InterstialAd Setup
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', () => {//to disable end review cycle on press hardware back button
@@ -46,24 +70,45 @@ const AddScreen = (props) => {
         })
     }, [])
 
-    //InterstialAd Setup
+    //User tutorial
+    let Step0 = <View style={stylesSteps.container}>
+        <Icon name="warning" size={35} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Atenção, possível configuração.
+            {"\n"}
+            {"\n"}
+            Verifique se a opção "Visualizar armazenamento interno" do seu navegador de arquivos está habilitada quando selecionar a opção para anexar um arquivo de áudio/imagem.
+            {"\n"}
+            {"\n"}
+            Para ativar essa opção, clique nas configurações no canto superior direito da tela no seu navegador de arquivos (quando aberto), um ícone similar a este:
+            {"\n"}
+        </Text>
+        <Icon2 name="dots-three-vertical" size={25} color="#303030" />   
+    </View>
+
+    let Step1 = <View style={stylesSteps.container}>
+        <Text style={stylesSteps.desciptionText}>
+            Caso contrário, é possível que você não consiga visualizar os arquivos desejados e, consequentemente, não consiga anexá-los na revisão.
+            {"\n"}
+            {"\n"}
+        </Text>
+    </View>
+
     useEffect(() => {
-        const eventListener = interstitial.onAdEvent(type => {
-            if (type === AdEventType.LOADED) {
-                console.log('carregou')
-                setLoadedAd(true);
+        async function checkIfItsTheFirstTime() {
+
+            const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeAddReviewsScreen")
+            
+            if (!firstTimeOnScreen) {
+                setHandleOpenTutorialModal(true)
+                await AsyncStorage.setItem('@TTR:firstTimeAddReviewsScreen', 'true')
             }
-          });
-      
-          // Start loading the interstitial straight away
-          interstitial.load();
-      
-          // Unsubscribe from events on unmount
-          return () => {
-            eventListener();
-          };
+
+        }
+
+        checkIfItsTheFirstTime()
     }, [])
-    //InterstialAd Setup
+    //User tutorial
 
     function handlePressGoBack() {
         props.route.params.onGoBack(null)
@@ -212,7 +257,7 @@ const AddScreen = (props) => {
                 image: imageReview,
                 date: currentDate
             }).then((response) => {
-
+                
                 if (loadedAd) {
                     interstitial.show()
                 }
@@ -335,7 +380,15 @@ const AddScreen = (props) => {
                             <Icon3 name="library-music" size={28} color="#303030" style={styles.iconBack} />
                         </BorderlessButton>
                     </View>
-                </View> 
+                </View>
+                {
+                handleOpenTutorialModal ? 
+                    <ScreenTutorial
+                        handleCloseModal={() => setHandleOpenTutorialModal(false)}
+                        steps={[Step0, Step1]}
+                    />
+                    : null
+                }
             </View>
         </KeyboardAvoidingView>
     )
