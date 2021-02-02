@@ -66,6 +66,7 @@ const AddScreen = (props) => {
             Caso contrário, é possível que você não consiga visualizar os arquivos desejados e, consequentemente, não consiga anexá-los na revisão.
             {"\n"}
             {"\n"}
+            Dica: Se deseja selecionar múltiplas imagens, lembre-se de pressionar e segurar os arquivos desejados para seleciona-los antes de pressionar o botão confirmar.
         </Text>
     </View>
 
@@ -201,8 +202,9 @@ const AddScreen = (props) => {
                     });
             })
             //     //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
-
-                setImageReview(url)
+                if (url != []) {
+                    setImageReview(url)
+                }
                 
             } catch (err) {
                 if (DocumentPicker.isCancel(err)) {
