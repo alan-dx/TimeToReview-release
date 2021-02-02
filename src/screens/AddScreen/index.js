@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Alert, BackHandler, ToastAndroid } from 'react-native';
 import styles from './styles';
+import stylesSteps from './stylesSteps';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Icon2 from 'react-native-vector-icons/Entypo';
 import Icon3 from 'react-native-vector-icons/MaterialIcons';
 import { BorderlessButton } from "react-native-gesture-handler"
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +14,8 @@ import DocumentPicker from 'react-native-document-picker';
 import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'rn-fetch-blob';
 import InputWLabelL from '../../components/InputWLabelL';
+import AsyncStorage from '@react-native-community/async-storage';
+import ScreenTutorial from '../../components/ScreenTutorial';
 
 const AddScreen = (props) => {
 
@@ -28,6 +32,7 @@ const AddScreen = (props) => {
         align: 'left'
     })
     const [imageReview, setImageReview] = useState(null)
+    const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
 
     const navigation = useNavigation();
 
@@ -39,6 +44,46 @@ const AddScreen = (props) => {
             return true
         })
     }, [])
+
+    //User tutorial
+    let Step0 = <View style={stylesSteps.container}>
+        <Icon name="warning" size={35} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Atenção, possível configuração.
+            {"\n"}
+            {"\n"}
+            Verifique se a opção "Visualizar armazenamento interno" do seu navegador de arquivos está habilitada quando selecionar a opção para anexar um arquivo de áudio/imagem.
+            {"\n"}
+            {"\n"}
+            Para ativar essa opção, clique nas configurações no canto superior direito da tela no seu navegador de arquivos (quando aberto), um ícone similar a este:
+            {"\n"}
+        </Text>
+        <Icon2 name="dots-three-vertical" size={25} color="#303030" />   
+    </View>
+
+    let Step1 = <View style={stylesSteps.container}>
+        <Text style={stylesSteps.desciptionText}>
+            Caso contrário, é possível que você não consiga visualizar os arquivos desejados e, consequentemente, não consiga anexá-los na revisão.
+            {"\n"}
+            {"\n"}
+        </Text>
+    </View>
+
+    useEffect(() => {
+        async function checkIfItsTheFirstTime() {
+
+            const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeAddReviewsScreen")
+            
+            if (!firstTimeOnScreen) {
+                setHandleOpenTutorialModal(true)
+                await AsyncStorage.setItem('@TTR:firstTimeAddReviewsScreen', 'true')
+            }
+
+        }
+
+        checkIfItsTheFirstTime()
+    }, [])
+    //User tutorial
 
     function handlePressGoBack() {
         props.route.params.onGoBack(null)
@@ -125,39 +170,39 @@ const AddScreen = (props) => {
 
         try {
             
-            const res = await DocumentPicker.pick({
+            const res = await DocumentPicker.pickMultiple({
                 type: [DocumentPicker.types.images],
             });
-            
-            let url;
-            
-            await RNFetchBlob.fs
-            .stat(res.uri)
-            .then((stats) => {
-                console.log(stats.path)
-                url = `${stats.path}`
-            })
-            .catch((err) => {
-                Alert.alert(
-                    "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
-                    "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema"+
-                    " navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
-                    "Esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. \n\n"+
-                    "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
-                    [
-                        {
-                            text: "Ok, vou tentar de novo.",
-                            onPress: () => console.log("Cancel Pressed"),
-                            style: "cancel"
-                        }
-                    ],
-                    { cancelable: false }
-                    );
-                });
-                
-                //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
 
-                setImageReview([url])
+            let url = []
+            
+            res.forEach(async (item) => {
+                await RNFetchBlob.fs
+                .stat(item.uri)
+                .then((stats) => {
+                     url.push(`${stats.path}`)
+                    console.log(url)
+                })
+                .catch((err) => {
+                    Alert.alert(
+                        "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
+                        "Não foi possível selecionar um dos arquivo desejados, mas você ainda pode contornar esse problema.\n\n"+
+                        "Esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. \n\n"+
+                        "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
+                        [
+                            {
+                                text: "Ok, vou tentar de novo.",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "cancel"
+                            }
+                        ],
+                        { cancelable: false }
+                        );
+                    });
+            })
+            //     //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
+
+                setImageReview(url)
                 
             } catch (err) {
                 if (DocumentPicker.isCancel(err)) {
@@ -306,7 +351,15 @@ const AddScreen = (props) => {
                             <Icon3 name="library-music" size={28} color="#303030" style={styles.iconBack} />
                         </BorderlessButton>
                     </View>
-                </View> 
+                </View>
+                {
+                handleOpenTutorialModal ? 
+                    <ScreenTutorial
+                        handleCloseModal={() => setHandleOpenTutorialModal(false)}
+                        steps={[Step0, Step1]}
+                    />
+                    : null
+                }
             </View>
         </KeyboardAvoidingView>
     )

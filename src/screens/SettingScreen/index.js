@@ -246,7 +246,8 @@ const SettingScreen = (props) => {
                         "@TTR:firstTimeSubjectScreen",
                         "@TTR:firstTimePerformanceScreen",
                         "@TTR:firstTimeHomeScreen",
-                        "@TTR:firstTimeOpenTips"
+                        "@TTR:firstTimeOpenTips",
+                        "@TTR:firstTimeAddReviewsScreen"
                     ])
                 },
                 style: "cancel"

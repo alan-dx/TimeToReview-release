@@ -39,6 +39,24 @@ const styles = StyleSheet.create({
         zIndex: -1,
         position: 'absolute',
         bottom: '50%'
+    },
+    nextImage: {
+        borderRadius: 50,
+
+        position: 'absolute',
+        right: 5,
+        bottom: 135,
+        alignItems: 'center',
+        justifyContent: "center"
+    },
+    backImage: {
+        borderRadius: 50,
+
+        position: 'absolute',
+        left: 5,
+        bottom: 135,
+        alignItems: 'center',
+        justifyContent: "center"
     }
 })
 
