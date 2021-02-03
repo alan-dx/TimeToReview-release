@@ -90,46 +90,27 @@ const HomeScreen = () => {
     </View>
 
     let Step3 = <View style={stylesSteps.container}>
-        <Icon2 style={{marginBottom: 10}} name="airplay" size={35} color="#303030" />
+        <Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
-            Sobre os anúncios!
+            Aplicativo em Dark Mode!
             {"\n"}
             {"\n"}
-            Ao utilizar o TimeToReview você irá encontrar anúncios em algumas telas, mas não se preocupe eles foram elaborados e 
-            posicionados de modo que não interfiram significativamente na experiência do usuário.
+            Se você utiliza o Dark Mode (Tema Escuro) em seu dispositivo, as cores do aplicativo serão adaptadas (pelo próprio aparelho) para adequá-lo ao tema.
             {"\n"}
             {"\n"}
-            Os anúncios são uma das formas que nós desenvolvedores independentes temos de gerar receita com os softwares desenvolvidos e assim
-            continuar criando, mantendo e custeando nossas aplicações.
+            Cabe ressaltar que, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, gerando algumas inconsistências. Porém, isso não interfere no uso da aplicação.
         </Text>
     </View>
 
     let Step4 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="trending-up" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
-            Seja Premium!
+            Obrigado por adquirir o TimeToReview Premium!
             {"\n"}
             {"\n"}
-            Caso deseje, é possível eliminar os anúncios e obter benefícios exclusivos com a versão Premium do TimeToReview. 
-            {"\n"}
-            {"\n"}
-            Para obter mais informações verifique a sessão "Seja Premium" no Menu.
+            Agora você tem acesso a todos os benefícios e atualizações futuras dessa versão, muitas novidades virão, então mantenha o app sempre atualizado.
         </Text>
     </View>
-
-    let Step5 = <View style={stylesSteps.container}>
-<Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
-<Text style={stylesSteps.desciptionText}>
-    Aplicativo em Dark Mode!
-    {"\n"}
-    {"\n"}
-    Se você utiliza o Dark Mode (Tema Escuro) em seu dispositivo, as cores do aplicativo serão adaptadas pelo próprio aparelho para adequá-lo ao tema.
-    {"\n"}
-    {"\n"}
-    Cabe ressaltar que, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, gerando algumas inconsistências. Porém, isso não interfere no uso da aplicação.
-</Text>
-</View>
-
 
     async function checkIfItsTheFirstTime() { //See useFocusEffect
         const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeHomeScreen")
@@ -262,7 +243,7 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={[Step0, Step1, Step2, Step3, Step4, Step5]} 
+                steps={[Step0, Step1, Step2, Step3, Step4]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null
