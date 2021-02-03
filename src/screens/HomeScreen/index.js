@@ -33,7 +33,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         if (Appearance.getColorScheme() == 'dark') {
-            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 1800)
+            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 2800)
         }
     }, [])
 
@@ -117,7 +117,7 @@ const HomeScreen = () => {
         </Text>
     </View>
 
-let Step5 = <View style={stylesSteps.container}>
+    let Step5 = <View style={stylesSteps.container}>
 <Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
 <Text style={stylesSteps.desciptionText}>
     Aplicativo em Dark Mode!
