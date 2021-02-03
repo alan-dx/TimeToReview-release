@@ -33,7 +33,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         if (Appearance.getColorScheme() == 'dark') {
-            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 2400)
+            ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 2800)
         }
     }, [])
 
