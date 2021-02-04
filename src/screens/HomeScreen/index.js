@@ -90,6 +90,23 @@ const HomeScreen = () => {
     </View>
 
     let Step3 = <View style={stylesSteps.container}>
+        <Icon style={{marginBottom: 10}} name="checkcircleo" size={35} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Sobre as permissões!
+            {"\n"}
+            {"\n"}
+            Algumas permissões de acesso ao seu dispositivo serão solicitadas, é de extrema importância que você as permita para um correto funcionamento do aplicativo.
+            {"\n"}
+            {"\n"}
+            As permissões são as seguintes: Acessar arquivos em geral (fotos, media, áudio, etc) na mémoria compartilhada do dispositivo e acesso à sua câmera. 
+            {"\n"}
+            {"\n"}
+            A primeira é necessária para anexar 
+            arquivos de áudio e imagem nas suas revisões, já a segunda é utilizada na hora de definir uma foto de perfil.
+        </Text>
+    </View>
+
+    let Step4 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
             Aplicativo em Dark Mode!
@@ -102,7 +119,7 @@ const HomeScreen = () => {
         </Text>
     </View>
 
-    let Step4 = <View style={stylesSteps.container}>
+    let Step5 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="trending-up" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
             Obrigado por adquirir o TimeToReview Premium!
@@ -243,7 +260,7 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={[Step0, Step1, Step2, Step3, Step4]} 
+                steps={[Step0, Step1, Step2, Step3, Step4, Step5]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null
