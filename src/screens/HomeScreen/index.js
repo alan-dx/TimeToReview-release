@@ -90,6 +90,23 @@ const HomeScreen = () => {
     </View>
 
     let Step3 = <View style={stylesSteps.container}>
+        <Icon style={{marginBottom: 10}} name="checkcircleo" size={35} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Sobre as permissões!
+            {"\n"}
+            {"\n"}
+            Algumas permissões de acesso ao seu dispositivo serão solicitadas, é de extrema importância que você as permita para um correto funcionamento do aplicativo.
+            {"\n"}
+            {"\n"}
+            As permissões são as seguintes: Acessar arquivos em geral (fotos, media, áudio, etc) na mémoria compartilhada do dispositivo e acesso à sua câmera. 
+            {"\n"}
+            {"\n"}
+            A primeira é necessária para anexar 
+            arquivos de áudio e imagem nas suas revisões, já a segunda é utilizada na hora de definir uma foto de perfil.
+        </Text>
+    </View>
+
+    let Step4 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="airplay" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
             Sobre os anúncios!
@@ -104,7 +121,7 @@ const HomeScreen = () => {
         </Text>
     </View>
 
-    let Step4 = <View style={stylesSteps.container}>
+    let Step5 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="trending-up" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
             Seja Premium!
@@ -117,13 +134,13 @@ const HomeScreen = () => {
         </Text>
     </View>
 
-    let Step5 = <View style={stylesSteps.container}>
+    let Step6 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
             Aplicativo em Dark Mode!
             {"\n"}
             {"\n"}
-            Se você utiliza o Dark Mode (Tema Escuro) em seu dispositivo, as cores do aplicativo serão adaptadas pelo próprio aparelho para adequá-lo ao tema.
+            Se você utiliza o Dark Mode (Tema Escuro) em seu dispositivo, as cores do aplicativo serão adaptadas (pelo próprio aparelho) para adequá-lo ao tema.
             {"\n"}
             {"\n"}
             Cabe ressaltar que, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, gerando algumas inconsistências. Porém, isso não interfere no uso da aplicação.
@@ -251,7 +268,7 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={[Step0, Step1, Step2, Step3, Step4, Step5]} 
+                steps={[Step0, Step1, Step2, Step3, Step4, Step5, Step6]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null

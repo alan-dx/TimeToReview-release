@@ -283,7 +283,7 @@ const SettingScreen = (props) => {
                 >
                     <RectButton style={styles.optionContainer} 
                         onPress={() => {
-                            Linking.openURL("http://10.0.0.14:3333/privacyPolicy")
+                            Linking.openURL("https://timetoreview.herokuapp.com/privacyPolicy")
                         }}
                     >
                         <Text style={styles.optionText}>Termos e Política de Privacidade</Text>

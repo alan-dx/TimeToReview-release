@@ -265,11 +265,25 @@ const ReviewsScreen = (props) => {
         }
     }
 
-    function handlePressGoToAddScreen() {
+    async function handlePressGoToAddScreen() {
+
         if ((subjects.length != 0) && (routines.length != 0)) {
-            navigation.navigate("AddScreen", {
-                onGoBack: handleUpdateDataOnAdd
-            })
+
+            await PermissionsAndroid.requestMultiple([
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            ]).then((response) => {
+                if(response["android.permission.READ_EXTERNAL_STORAGE"] == 'denied') {
+                    alert('Precisamos dessa permissão para permitir que você associe imagens e arquivos de áudio em suas revisões. Por favor realize o processo novamente!')
+                } else {
+                    navigation.navigate("AddScreen", {
+                        onGoBack: handleUpdateDataOnAdd
+                    })
+                }
+            }).catch((err) => {
+                console.log(err)
+            });
+
         } else {
             Alert.alert(
                 "Ops... calma ai!",
@@ -308,13 +322,29 @@ const ReviewsScreen = (props) => {
         })
     }
 
-    function handleGoToEditScreen(screenData) {
-        console.log(screenData)
-        navigation.navigate("EditScreen", {
-            screenData: screenData,
-            fromReviewsScreen: true,
-            onGoBack: handleUpdateDataOnEdit
-        })
+    async function handleGoToEditScreen(screenData) {
+
+        await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        ]).then((response) => {
+            if(response["android.permission.READ_EXTERNAL_STORAGE"] == 'denied') {
+                alert('Precisamos dessa permissão para permitir que você associe imagens e arquivos de áudio em suas revisões. Por favor realize o processo novamente!')
+            } else {
+
+                console.log(screenData)
+                navigation.navigate("EditScreen", {
+                    screenData: screenData,
+                    fromReviewsScreen: true,
+                    onGoBack: handleUpdateDataOnEdit
+                })
+
+            }
+        }).catch((err) => {
+            console.log(err)
+        });
+
+
     }
 
     function handleUpdateDataOnEdit(passData) {

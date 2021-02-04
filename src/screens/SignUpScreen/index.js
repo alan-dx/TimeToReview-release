@@ -177,7 +177,7 @@ const LoginScreen = () => {
                         style={styles.checkbox}
                     />
                     <Text style={styles.label}>Concordo com a
-                        <Text onPress={() => Linking.openURL("http://10.0.0.14:3333/privacyPolicy")} style={{fontWeight: 'bold', textDecorationLine: 'underline'}}> política de privacidade e termos de uso</Text>
+                        <Text onPress={() => Linking.openURL("https://timetoreview.herokuapp.com/privacyPolicy")} style={{fontWeight: 'bold', textDecorationLine: 'underline'}}> política de privacidade e termos de uso</Text>
                     </Text>
                 </View>
                 <View style={styles.buttonBox}>
