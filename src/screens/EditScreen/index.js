@@ -171,7 +171,22 @@ const EditScreen = (props) => {
             })
             .catch((err) => {
                 console.log(err);
-                alert(err)
+                url = null
+                Alert.alert(
+                    "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
+                    "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema. \n\n"+
+                    "Primeiro, verifique se as permissões solicitadas foram dadas.\n\n"+
+                    "Além disso, esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. Você pode tentar solucionar navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
+                    "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
+                    [
+                        {
+                            text: "Ok, vou tentar de novo.",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                        }
+                    ],
+                    { cancelable: false }
+                );
             });
 
             let track = {
@@ -196,8 +211,9 @@ const EditScreen = (props) => {
             //     artist: 'Rohan Bhatia',
             //     artwork: 'https://picsum.photos/100',
             // }
-
-            setTrackAudioReview(track)
+            if (url) {
+                setTrackAudioReview(track)
+            }
 
           } catch (err) {
             if (DocumentPicker.isCancel(err)) {
@@ -239,12 +255,13 @@ const EditScreen = (props) => {
                 url = `${stats.path}`
             })
             .catch((err) => {
+                url = null
                 Alert.alert(
                     "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
-                    "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema"+
-                    " navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
-                    "Esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. \n\n"+
-                    "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
+                        "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema. \n\n"+
+                        "Primeiro, verifique se as permissões solicitadas foram dadas.\n\n"+
+                        "Além disso, esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. Você pode tentar solucionar navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
+                        "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
                     [
                         {
                             text: "Ok, vou tentar de novo.",
@@ -258,7 +275,9 @@ const EditScreen = (props) => {
                 
                 //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
 
-                setImageReview([url])
+                if (url) {
+                    setImageReview([url])
+                }
                 
             } catch (err) {
                 if (DocumentPicker.isCancel(err)) {
