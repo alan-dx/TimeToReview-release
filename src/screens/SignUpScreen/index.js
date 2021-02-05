@@ -10,6 +10,7 @@ import AuthContext from '../../contexts/auth';
 import styles from './styles';
 import InputWLabelL from '../../components/InputWLabelL';
 import InputWLabelR from '../../components/InputWLabelR';
+import api from '../../services/api';
 
 const LoginScreen = () => {
 
@@ -20,8 +21,8 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('')
     const [cPassword, setCPassword] = useState('')
     const [checkBoxIsSelected, setCheckBoxIsSelected] = useState(false)
-
     const [logo] = useState(new Animated.ValueXY({x: 250, y: 250 }))
+    const [loadingButton, setLoadingButton] = useState(false)
 
     useEffect(() => {
         keyBoardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
@@ -77,15 +78,48 @@ const LoginScreen = () => {
 
     const navigation = useNavigation();
 
-    function handleClickSignUpButton() {
+    async function handleClickSignUpButton() {
         if (password != cPassword) {
             return alert("As senhas não conferem! Verifique e tente novamente.")
         }
         if (password && cPassword && name && email) {
             if (checkBoxIsSelected) {
                 if (validationEmail(email)) {
-                    signUpContext({name, email, password})
-                    navigation.goBack()
+                    // signUpContext({name, email, password})
+
+                    try {
+                        if (!loadingButton) {
+                            setLoadingButton(true)
+                            //REFACTOR LATER
+                            await api.post('/signUp', {name, email, password}).then(response => {
+                                alert('Usuário cadastrado com sucesso')
+                                navigation.navigate("SignIn")
+                            })
+                            //REFACTOR LATER
+
+                        }
+                    } catch (error) {
+                        setLoadingButton(false)
+                        if (error == "Error: Request failed with status code 400") {
+                            Alert.alert(
+                                "Email já cadastrado!",
+                                "Esse email já possui uma conta associada, verifique e tente novamente.",
+                                [
+                                  {
+                                    text: "Ok",
+                                    onPress: () => {},
+                                    style: "cancel"
+                                  },
+                                ],
+                                { cancelable: false }
+                              )
+                        } else if (error == "Error: Request failed with status code 500") {
+                            alert("Houve um erro interno no servidor, tente novamente mais tarde!")
+                        } else {
+                            alert(error)
+                        }
+                    }
+
                 } else {
                     Alert.alert(
                         "Email Inválido",
@@ -181,7 +215,14 @@ const LoginScreen = () => {
                     </Text>
                 </View>
                 <View style={styles.buttonBox}>
-                    <CustomButton text="CADASTRAR" color='#60c3eb' onPress={handleClickSignUpButton} />
+                {
+                    loadingButton
+                    ?
+                        <CustomButton text="AGUARDE..." color='#60c3eb' onPress={() => {}}/>
+                    :   
+                        <CustomButton text="CADASTRAR" color='#60c3eb' onPress={handleClickSignUpButton} />
+                }
+                    
                 </View>
             </KeyboardAwareScrollView>
         </View>

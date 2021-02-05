@@ -44,6 +44,7 @@ export const AuthProvider = (props) => {
         loadStorageData()
     }, [])
 
+    //REMOVE LATER
     async function signInContext(data) {
         try {
 
@@ -90,7 +91,9 @@ export const AuthProvider = (props) => {
 
         }
     }
+    //REMOVE LATER
 
+    //REMOVE LATER
     async function signUpContext(data) {
         try {
             return await api.post('/signUp', data).then(response => {
@@ -118,6 +121,7 @@ export const AuthProvider = (props) => {
             }
         }
     }
+    //REMOVE LATER
 
     async function logoutContext() {
         try {
@@ -146,7 +150,7 @@ export const AuthProvider = (props) => {
     return (
         <AuthContext.Provider value={{
             signed: token, user: user, setUser, signInContext, signUpContext, 
-            logoutContext, loadUserReviews, routines, setRoutines, subjects, 
+            logoutContext, loadUserReviews, routines, setRoutines, subjects, setToken,
             setSubjects, reviews, setReviews, loadServerData, allReviews, setAllReviews, 
             performance, setPerformance, lastWeekPerformance, setLastWeekPerformance}}>
             {props.children}

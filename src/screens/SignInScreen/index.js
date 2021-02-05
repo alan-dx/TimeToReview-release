@@ -12,12 +12,15 @@ import styles from './styles';
 import { BorderlessButton } from 'react-native-gesture-handler';
 import InputWLabelL from '../../components/InputWLabelL';
 import InputWLabelR from '../../components/InputWLabelR';
+import api from '../../services/api';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const LoginScreen = () => {
 
-    const { signInContext } = useContext( AuthContext )
+    const { signInContext, setToken } = useContext( AuthContext )
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loadingButton, setLoadingButton] = useState(false)
 
     const navigation = useNavigation();
 
@@ -69,13 +72,65 @@ const LoginScreen = () => {
     }
 
 
-    function handleClickSignInButton() {
+    async function handleClickSignInButton() {
+
         if (email != '' && password != '') {
-            signInContext({email, password})
+
+            // signInContext({email, password})
+            
+            try {
+                if (!loadingButton) {
+                    setLoadingButton(true)
+                    const response = await api.post('/signIn', {email, password})
+                    if (response.data) {
+                        const { token } = response.data;
+                        api.defaults.headers["Authorization"] = `Bearer ${token}`
+                        await AsyncStorage.setItem("@TTR:token", token)
+                        // AsyncStorage.setItem("@TTR:user", JSON.stringify(user))
+                        setToken(token)
+                        // setUser(user)
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+                setLoadingButton(false)
+
+                if (error == 'Error: Request failed with status code 401') {
+                    alert(`Senha/Email Incorretos. Verifique e tente novamente!`)
+                } else if ( error == 'Error: Request failed with status code 404') {
+                    Alert.alert(
+                        "Usuário não encontrado!",
+                        "Não há conta associada a esse endereço de email, verifique e tente novamente",
+                        [
+                          {
+                            text: "Ok!",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                          }
+                        ],
+                        { cancelable: false }
+                      );
+                } else if ( error == 'Error: Request failed with status code 406') {
+                    Alert.alert(
+                        "Conta desativada!",
+                        "Esta conta foi desativada, entre em contato com nossa equipe.",
+                        [
+                          {
+                            text: "Ok!",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                          }
+                        ],
+                        { cancelable: false }
+                      );
+                }
+    
+            }
+
         } else {
             Alert.alert(
                 "Verifique os dados",
-                "Preencha os campos solicitados!",
+                "Preencha todos os campos solicitados!",
                 [
                   {
                     text: "Ok",
@@ -86,6 +141,7 @@ const LoginScreen = () => {
                 { cancelable: false }
               )
         }
+
     }
 
     function handleGoToForgotPassword() {
@@ -128,7 +184,14 @@ const LoginScreen = () => {
                 />
                 <View style={styles.buttonBox}>
                     <View style={{marginTop: 25, width: '100%', alignSelf: 'center', alignItems: 'center'}}>
-                        <CustomButton text="LOGAR" color='#e74e36' onPress={handleClickSignInButton}/>
+                        {
+                            loadingButton
+                            ?
+                                <CustomButton text="AGUARDE..." color='#e74e36' onPress={() => {}}/>
+                            :   
+                                <CustomButton text="LOGAR" color='#e74e36' onPress={handleClickSignInButton}/>
+
+                        }
                     </View>
                     <View style={styles.forgotPasswordBox}>
                         <BorderlessButton onPress={handleGoToForgotPassword}>
