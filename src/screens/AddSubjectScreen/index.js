@@ -111,6 +111,7 @@ const AddSubjectScreen = (props) => {
                     onChangeText={setTitleSubject}
                     placeholder="Ex.: Cálculo III"
                     textAlign="center"
+                    autoCapitalize="words"
                 />
                 <View style={styles.inputBox}>
                     <View style={styles.labelBoxR}>

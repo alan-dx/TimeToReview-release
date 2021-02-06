@@ -93,6 +93,7 @@ const EditSubjectScreen = (props) => {
                     placeholder="Ex.: Cálculo III"
                     textAlign="center"
                     lineColor="#e74e36"
+                    autoCapitalize="words"
                 />
                 <View style={styles.inputBox}>
                     <View style={styles.labelBoxR}>
