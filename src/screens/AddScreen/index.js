@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Alert, BackHandler, ToastAndroid } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Alert, BackHandler, ToastAndroid, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import stylesSteps from './stylesSteps';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -33,6 +33,7 @@ const AddScreen = (props) => {
     })
     const [imageReview, setImageReview] = useState(null)
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
+    const [loadingButton, setLoadingButton] = useState(false)
 
     const navigation = useNavigation();
 
@@ -229,47 +230,55 @@ const AddScreen = (props) => {
         if (!titleReview || !subjectReview || !routineReview) {
             alert("Preencha todos os campos!")
         } else {
-            api.post('/createReview', {
-                title: titleReview,
-                routine_id: routineReview._id,
-                subject_id: subjectReview._id,
-                dateNextSequenceReview: dateNextSequenceReview,
-                track: trackAudioReview,
-                notes: notesReview,
-                image: imageReview,
-                date: currentDate
-            }).then((response) => {
+            
+            if (!loadingButton) {
+                setLoadingButton(true)
 
-                navigation.goBack()
-                setAllReviews([...allReviews, response.data])
-                console.log(response.data)
-                subjects.forEach(item => {
-                    if (item._id == subjectReview._id) {
-                        item.associatedReviews.push(response.data._id)
+                api.post('/createReview', {
+                    title: titleReview,
+                    routine_id: routineReview._id,
+                    subject_id: subjectReview._id,
+                    dateNextSequenceReview: dateNextSequenceReview,
+                    track: trackAudioReview,
+                    notes: notesReview,
+                    image: imageReview,
+                    date: currentDate
+                }).then((response) => {
+    
+                    navigation.goBack()
+                    setAllReviews([...allReviews, response.data])
+                    console.log(response.data)
+                    subjects.forEach(item => {
+                        if (item._id == subjectReview._id) {
+                            item.associatedReviews.push(response.data._id)
+                        }
+                    })
+    
+                    routines.forEach(item => {
+                        if (item._id == routineReview._id) {
+                            item.associatedReviews.push(response.data._id)
+                        }
+                    })
+    
+                    if (dateNextSequenceReview.getDate() == currentDate.getDate()) {
+                        props.route.params.onGoBack(response.data)
+                    }
+    
+                }).catch((err) => {
+                    setLoadingButton(false)
+
+                    console.log(err)
+                    if (err == 'Error: Request failed with status code 500') {
+                        alert("Erro interno do servidor, tente novamente mais tarde!.")
+                    } else if (err = 'Error: Network Error') {
+                        alert("Sessão expirada!")
+                        logoutContext()
+                    } else {
+                        alert('Houve um erro ao tentar salvar sua revisão no banco de dados, tente novamente!')
                     }
                 })
 
-                routines.forEach(item => {
-                    if (item._id == routineReview._id) {
-                        item.associatedReviews.push(response.data._id)
-                    }
-                })
-
-                if (dateNextSequenceReview.getDate() == currentDate.getDate()) {
-                    props.route.params.onGoBack(response.data)
-                }
-
-            }).catch((err) => {
-                console.log(err)
-                if (err == 'Error: Request failed with status code 500') {
-                    alert("Erro interno do servidor, tente novamente mais tarde!.")
-                } else if (err = 'Error: Network Error') {
-                    alert("Sessão expirada!")
-                    logoutContext()
-                } else {
-                    alert('Houve um erro ao tentar salvar sua revisão no banco de dados, tente novamente!')
-                }
-            })
+            }
         }
 
     }
@@ -282,9 +291,15 @@ const AddScreen = (props) => {
                     <BorderlessButton onPress={handlePressGoBack}>
                         <Icon name="close" size={25} color="#F7F7F7" style={styles.iconBack} />
                     </BorderlessButton>
-                    <BorderlessButton onPress={handleCreateReview}>
-                        <Icon name="check" size={25} color="#F7F7F7" style={styles.iconBack} />
-                    </BorderlessButton>
+                    {
+                        loadingButton 
+                        ?
+                        <ActivityIndicator size="small" color="#F7F7F7" />
+                        :
+                        <BorderlessButton onPress={handleCreateReview}>
+                            <Icon name="check" size={25} color="#F7F7F7" style={styles.iconBack} />
+                        </BorderlessButton>
+                    }
                 </View>
                 <Text style={styles.headerText}>ADICIONAR REVISÃO</Text>
             </View>
@@ -308,6 +323,7 @@ const AddScreen = (props) => {
                     onChangeText={setTitleReview}
                     placeholder="Ex.: EDO de Bernoulli"
                     textAlign="center"
+                    autoCapitalize="words"
                 />
                 <View style={styles.inputBox}>
                     <View style={styles.labelBoxR}>

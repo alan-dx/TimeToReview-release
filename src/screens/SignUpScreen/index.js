@@ -174,6 +174,7 @@ const LoginScreen = () => {
                     onChangeText={setName}
                     placeholder="Nome Sobrenome"
                     textAlign="center"
+                    autoCapitalize="words"
                 />
                 <InputWLabelR
                     labelTitle="Seu Email"

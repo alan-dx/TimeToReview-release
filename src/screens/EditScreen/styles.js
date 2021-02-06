@@ -50,10 +50,12 @@ const styles = StyleSheet.create({
     },
     dntReviewBox: {
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        alignSelf: 'center',
     },
     dntReview: {
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf: 'center'
     },
     labelIconBox: {
         flexDirection: 'row',

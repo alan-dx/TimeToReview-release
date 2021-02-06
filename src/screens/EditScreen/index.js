@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, KeyboardAvoidingView, Alert, ToastAndroid, BackHandler } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Alert, ToastAndroid, BackHandler, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icon3 from 'react-native-vector-icons/MaterialIcons';
@@ -11,7 +11,6 @@ import AuthContext from '../../contexts/auth';
 import DocumentPicker from 'react-native-document-picker';
 import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'rn-fetch-blob';
-import ImagePicker from 'react-native-image-picker';
 import InputWLabelL from '../../components/InputWLabelL';
 
 const EditScreen = (props) => {
@@ -29,6 +28,7 @@ const EditScreen = (props) => {
     const [currentSequenceReview, setCurrentSequenceReview] = useState(dataScreen.routine_id.sequence[dataScreen.currentSequenceReview])
     const [createdDate] = useState(new Date(dataScreen.createdAt))
     const [imageReview, setImageReview] = useState(dataScreen.image)
+    const [loadingButton, setLoadingButton] = useState(false)
 
     const navigation = useNavigation();
 
@@ -90,57 +90,63 @@ const EditScreen = (props) => {
         }
 
         if (editData.title || editData.subject_id || editData.routine_id || editData.track || editData.notes || editData.image) {
-            api.put('/editReview', editData,
-            {
-                params: {
-                    id: dataScreen._id
-                }
-            }).then((response) => {
+            if (!loadingButton) {
+                setLoadingButton(true)
 
-                const index = allReviews.findIndex(item => item._id == response.data.review._id)
-                const newAllReviews = allReviews
-                newAllReviews[index] = response.data.review
+                api.put('/editReview', editData,
+                {
+                    params: {
+                        id: dataScreen._id
+                    }
+                }).then((response) => {
+    
+                    const index = allReviews.findIndex(item => item._id == response.data.review._id)
+                    const newAllReviews = allReviews
+                    newAllReviews[index] = response.data.review
+    
+                    setAllReviews(newAllReviews)
+    
+                    if (subjectReview._id != dataScreen.subject_id._id) {//REPRESENTA A MODIFICAÇÃO DA MATÉRIA, MODIFICA APENAS O NÚMERO DE REVISÕES ASSOCIADAS NA TELA DE MATÉRIAS
+    
+                        const newSubjects = subjects
+            
+                        const indexOldSubject = subjects.findIndex(item => item._id == dataScreen.subject_id._id)
+                        const indexNewSubject = subjects.findIndex(item => item._id == subjectReview._id)
+            
+                        newSubjects[indexOldSubject].associatedReviews = newSubjects[indexOldSubject].associatedReviews.filter(item => item != dataScreen._id)
+                        newSubjects[indexNewSubject].associatedReviews.push(dataScreen._id)
+            
+                        setSubjects(newSubjects)
+            
+                    }
+            
+                    if(routineReview._id != dataScreen.routine_id._id) {//REPRESENTA A MODIFICAÇÃO DA MATÉRIA, MODIFICA APENAS O NÚMERO DE REVISÕES ASSOCIADAS NA TELA DE MATÉRIAS
+                        const newRoutines = routines
+            
+                        const indexOldRoutine = routines.findIndex(item => item._id == dataScreen.routine_id._id)
+                        const indexNewRoutine = routines.findIndex(item => item._id == routineReview._id)
+            
+                        newRoutines[indexOldRoutine].associatedReviews = newRoutines[indexOldRoutine].associatedReviews.filter(item => item != dataScreen._id)
+                        newRoutines[indexNewRoutine].associatedReviews.push(dataScreen._id)
+                    }
+    
+                    props.route.params.onGoBack(response.data.review)
+                    navigation.goBack()
+                    
+                }).catch((err) => {
+                    setLoadingButton(false)
 
-                setAllReviews(newAllReviews)
-
-                if (subjectReview._id != dataScreen.subject_id._id) {//REPRESENTA A MODIFICAÇÃO DA MATÉRIA, MODIFICA APENAS O NÚMERO DE REVISÕES ASSOCIADAS NA TELA DE MATÉRIAS
-
-                    const newSubjects = subjects
-        
-                    const indexOldSubject = subjects.findIndex(item => item._id == dataScreen.subject_id._id)
-                    const indexNewSubject = subjects.findIndex(item => item._id == subjectReview._id)
-        
-                    newSubjects[indexOldSubject].associatedReviews = newSubjects[indexOldSubject].associatedReviews.filter(item => item != dataScreen._id)
-                    newSubjects[indexNewSubject].associatedReviews.push(dataScreen._id)
-        
-                    setSubjects(newSubjects)
-        
-                }
-        
-                if(routineReview._id != dataScreen.routine_id._id) {//REPRESENTA A MODIFICAÇÃO DA MATÉRIA, MODIFICA APENAS O NÚMERO DE REVISÕES ASSOCIADAS NA TELA DE MATÉRIAS
-                    const newRoutines = routines
-        
-                    const indexOldRoutine = routines.findIndex(item => item._id == dataScreen.routine_id._id)
-                    const indexNewRoutine = routines.findIndex(item => item._id == routineReview._id)
-        
-                    newRoutines[indexOldRoutine].associatedReviews = newRoutines[indexOldRoutine].associatedReviews.filter(item => item != dataScreen._id)
-                    newRoutines[indexNewRoutine].associatedReviews.push(dataScreen._id)
-                }
-
-                props.route.params.onGoBack(response.data.review)
-                navigation.goBack()
-                
-            }).catch((err) => {
-                console.log(err)
-                if (err == 'Error: Request failed with status code 500') {
-                    alert("Erro interno do servidor, tente novamente mais tarde!.")
-                } else if (err = 'Error: Network Error') {
-                    alert("Sessão expirada!")
-                    logoutContext()
-                } else {
-                    alert('Houve um erro ao tentar salvar sua revisão no banco de dados, tente novamente!')
-                }
-            })
+                    console.log(err)
+                    if (err == 'Error: Request failed with status code 500') {
+                        alert("Erro interno do servidor, tente novamente mais tarde!.")
+                    } else if (err = 'Error: Network Error') {
+                        alert("Sessão expirada!")
+                        logoutContext()
+                    } else {
+                        alert('Houve um erro ao tentar salvar sua revisão no banco de dados, tente novamente!')
+                    }
+                })
+            }
         } else {
             ToastAndroid.show('Revisão NÃO editada', 600)
             navigation.goBack()
@@ -298,9 +304,15 @@ const EditScreen = (props) => {
                     <BorderlessButton onPress={handlePressGoBack}>
                         <Icon name="close" size={25} color="#F7F7F7" style={styles.iconBack} />
                     </BorderlessButton>
-                    <BorderlessButton onPress={editReview}>
-                        <Icon name="check" size={25} color="#F7F7F7" style={styles.iconBack} />
-                    </BorderlessButton>
+                    {
+                        loadingButton 
+                        ?
+                        <ActivityIndicator size="small" color="#F7F7F7" />
+                        :
+                        <BorderlessButton onPress={editReview}>
+                            <Icon name="check" size={25} color="#F7F7F7" style={styles.iconBack} />
+                        </BorderlessButton>
+                    }
                 </View>
                 <Text style={styles.headerText}>EDITAR REVISÃO</Text>
                 <Text style={styles.createdAtText}>Criação: {
@@ -344,6 +356,7 @@ const EditScreen = (props) => {
                     placeholder="Ex.: EDO de Bernoulli"
                     textAlign="center"
                     lineColor="#e74e36"
+                    autoCapitalize="words"
                 />
                 <View style={styles.inputBox}>
                     <View style={styles.labelBoxR}>

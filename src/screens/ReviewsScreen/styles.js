@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     flatlistCycle: {
-        width: '90%',
+        width: '100%',
         alignSelf: 'center'
     },
     adBox: {

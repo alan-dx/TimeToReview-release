@@ -13,7 +13,7 @@ const ColorPicker = (props) => {
         paletteStyles={styles.container}
         scaleToWindow
         onChange={color => props.setMarkerSubject(color)}
-        colors={['#4747d1','#cc0000', '#ff8000', '#836FFF', '#ffcc00', '#0099cc', '#303030', '#025CE2', '#cccc00', '#009933', '#0000e6', '#F4A460', '#006666', '#b35900', '#cc00ff', '#00ff99', '#801a00', '#ff00ff', '#3CB371', '#707070', '#ff5050', '#DC143C', '#FFD700', '#ff9900']}
+        colors={['#4747d1','#cc0000', '#ff8000', '#836FFF', '#ffcc00', '#0099cc', '#303030', '#025CE2', '#cccc00', '#009933', '#0000e6', '#F4A460', '#006666', '#b35900', '#cc00ff', '#00ff99', '#801a00', '#ff00ff', '#3CB371', '#707070', '#ff5050', '#DC143C', '#F13F00', '#ff9900']}
         title={"Paleta de cores:"}
         icon={
           <Icon name={'check'} size={20} color={'white'} />

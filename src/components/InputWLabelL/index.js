@@ -19,6 +19,7 @@ const InputWLabelL = (props) => {
                 onChangeText={props.onChangeText}
                 value={props.value}
                 secureTextEntry={props.secureTextEntry}
+                autoCapitalize={props.autoCapitalize || 'none'}
             />
         </View>
     )

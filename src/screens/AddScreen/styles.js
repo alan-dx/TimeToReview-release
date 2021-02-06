@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
     },
     dntReview: {
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf: 'center',
     },
     labelIconBox: {
         flexDirection: 'row',
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     subLabel: {
         marginTop: 6,
         color: '#ABABAB',
-        fontSize: 12,
+        fontSize: 11,
         fontFamily: 'Archivo-SemiBold'
     },
     labelTop: {

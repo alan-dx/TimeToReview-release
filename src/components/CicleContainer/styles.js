@@ -2,8 +2,8 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     timerBox: {
-        width: Dimensions.get('screen').width * 0.9,
-        justifyContent: 'space-between',
+        width: Dimensions.get('screen').width,
+        justifyContent: 'space-evenly',
         flexDirection: 'row',
         alignItems: 'center',
         alignSelf: 'center',
