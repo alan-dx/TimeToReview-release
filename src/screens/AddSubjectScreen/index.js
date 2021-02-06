@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { BorderlessButton } from "react-native-gesture-handler"
@@ -22,6 +22,7 @@ const AddSubjectScreen = (props) => {
     const [titleSubject, setTitleSubject] = useState('')
     const [markerSubject, setMarkerSubject] = useState('')
     const [loadedAd, setLoadedAd] = useState(false)
+    const [loadingButton, setLoadingButton] = useState(false)
 
     //InterstialAd Setup
     useEffect(() => {
@@ -51,28 +52,35 @@ const AddSubjectScreen = (props) => {
         if (!titleSubject || !markerSubject) {
             alert("Preencha todos os campos abaixo")
         } else {
-            api.post("/createSubject", {
-                title: titleSubject,
-                marker: markerSubject
-            }).then((response) => {
+            if (!loadingButton) {
+                setLoadingButton(true)
 
-                if (loadedAd) {
-                    interstitial.show()
-                }
+                api.post("/createSubject", {
+                    title: titleSubject,
+                    marker: markerSubject
+                }).then((response) => {
+    
+                    if (loadedAd) {
+                        interstitial.show()
+                    }
+    
+                    props.route.params.onGoBack(response.data)
+                    navigation.goBack()
+                }).catch((err) => {
+                    setLoadingButton(false)
 
-                props.route.params.onGoBack(response.data)
-                navigation.goBack()
-            }).catch((err) => {
-                console.log(err)
-                if (err == 'Error: Request failed with status code 500') {
-                    alert("Erro interno do servidor, tente novamente mais tarde!.")
-                } else if (err = 'Error: Network Error') {
-                    alert("Sessão expirada!")
-                    logoutContext()
-                } else {
-                    alert('Houve um erro ao tentar salvar sua disciplina no banco de dados, tente novamente!')
-                }
-            })
+                    console.log(err)
+                    if (err == 'Error: Request failed with status code 500') {
+                        alert("Erro interno do servidor, tente novamente mais tarde!.")
+                    } else if (err = 'Error: Network Error') {
+                        alert("Sessão expirada!")
+                        logoutContext()
+                    } else {
+                        alert('Houve um erro ao tentar salvar sua disciplina no banco de dados, tente novamente!')
+                    }
+                })
+
+            }
         }
     }
 
@@ -83,9 +91,15 @@ const AddSubjectScreen = (props) => {
                     <BorderlessButton onPress={handlePressGoBack}>
                         <Icon name="close" size={25} color="#F7F7F7" style={styles.iconBack} />
                     </BorderlessButton>
-                    <BorderlessButton onPress={handleConfirmAdd} >
-                        <Icon name="check" size={25} color="#F7F7F7" style={styles.iconBack} />
-                    </BorderlessButton>
+                    {   
+                        loadingButton 
+                        ?
+                        <ActivityIndicator size="small" color="#F7F7F7" style={styles.iconBack} />
+                        :
+                        <BorderlessButton onPress={handleConfirmAdd}>
+                            <Icon name="check" size={25} color="#F7F7F7" style={styles.iconBack} />
+                        </BorderlessButton>
+                    }
                 </View>
                 <Text style={styles.headerText}>CRIAR DISCIPLINA</Text>
             </View>

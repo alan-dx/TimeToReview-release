@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TextInput, Alert } from 'react-native';
+import { View, Text, TextInput, Alert, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import stylesSteps from './stylesSteps';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -27,6 +27,7 @@ const RoutineScreen = (props) => {
     const [sequenceRoutine, setSequenceRoutine] = useState('')
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
     const [dataToEdit, setDataToEdit] = useState('')
+    const [loadingButton, setLoadingButton] = useState(false)
 
     //User tutorial
     let Step0 = <View style={stylesSteps.container}>
@@ -117,30 +118,40 @@ const RoutineScreen = (props) => {
 
         if (sequenceRoutine) {
             let sequenceFormated = sequenceRoutine
+            
             if (sequenceRoutine[sequenceRoutine.length - 1] == '-') {
                 sequenceFormated = sequenceRoutine.substr(0, sequenceRoutine.length - 1)
             }
 
-            api.post('/createRoutine', {
-                sequence: sequenceFormated
-            }).then((response) => {
-                console.log(response.data.routine)
-                setData([...data, response.data.routine])
-                setRoutines([...data, response.data.routine])
-                setModalAddVisible(false)
-                setSequenceRoutine('')
-                setDataToEdit('')
-            }).catch((err) => {
-                console.log(err)
-                if (err == 'Error: Request failed with status code 500') {
-                    alert("Erro interno do servidor, tente novamente mais tarde!")
-                } else if (err = 'Error: Network Error') {
-                    alert("Sessão expirada!")
-                    logoutContext()
-                } else {
-                    alert('Houve um erro ao tentar salvar sua sequência no banco de dados, tente novamente!')
-                }
-            })
+            if (!loadingButton) {
+                setLoadingButton(true)
+
+                api.post('/createRoutine', {
+                    sequence: sequenceFormated
+                }).then((response) => {
+                    setLoadingButton(false)
+
+                    console.log(response.data.routine)
+                    setData([...data, response.data.routine])
+                    setRoutines([...data, response.data.routine])
+                    setModalAddVisible(false)
+                    setSequenceRoutine('')
+                    setDataToEdit('')
+                }).catch((err) => {
+                    setLoadingButton(false)
+
+                    console.log(err)
+                    if (err == 'Error: Request failed with status code 500') {
+                        alert("Erro interno do servidor, tente novamente mais tarde!")
+                    } else if (err = 'Error: Network Error') {
+                        alert("Sessão expirada!")
+                        logoutContext()
+                    } else {
+                        alert('Houve um erro ao tentar salvar sua sequência no banco de dados, tente novamente!')
+                    }
+                })
+
+            }
 
         } else {
             setSequenceRoutine('')
@@ -199,47 +210,54 @@ const RoutineScreen = (props) => {
                 sequenceFormated = sequenceRoutine.substr(0, sequenceRoutine.length - 1)
             }
 
-            api.put('/editRoutine', {
-                sequence: sequenceFormated
-            }, {
-                params: {
-                    id: dataToEdit
-                }
-            }).then((response) => {
-    
-                const newData = data
-                setData([])
-                const index = newData.findIndex(item => item._id == dataToEdit)
-                newData[index] = response.data.routine
-                setRoutines(newData)
-                setData(newData)
-    
-                allReviews.map(item => {
-                    //EDITA AS INFORMAÇÕES DENTRO DAS REVISÕES QUE ESTAO ASSOCIADAS A ESSA ROTINA
-                    if (item.routine_id._id == dataToEdit) {
-                        item.routine_id = response.data.routine
+            if (!loadingButton) {
+                setLoadingButton(true)
+
+                api.put('/editRoutine', {
+                    sequence: sequenceFormated
+                }, {
+                    params: {
+                        id: dataToEdit
                     }
-                } )
-                // reviews.map(item => {
-                //     if (item.routine_id._id == dataToEdit) {
-                //         item.routine_id = response.data.routine
-                //     }
-                // })
-    
-                setModalEditVisible(false)
-                setSequenceRoutine('')
-                setDataToEdit('')
-            }).catch((err) => {
-                console.log(err)
-                if (err == 'Error: Request failed with status code 500') {
-                    alert("Erro interno do servidor, tente novamente mais tarde!")
-                } else if (err = 'Error: Network Error') {
-                    alert("Sessão expirada!")
-                    logoutContext()
-                } else {
-                    alert('Houve um erro ao tentar salvar sua sequência no banco de dados, tente novamente!')
-                }
-            })
+                }).then((response) => {
+                    setLoadingButton(false)
+                    
+                    const newData = data
+                    setData([])
+                    const index = newData.findIndex(item => item._id == dataToEdit)
+                    newData[index] = response.data.routine
+                    setRoutines(newData)
+                    setData(newData)
+        
+                    allReviews.map(item => {
+                        //EDITA AS INFORMAÇÕES DENTRO DAS REVISÕES QUE ESTAO ASSOCIADAS A ESSA ROTINA
+                        if (item.routine_id._id == dataToEdit) {
+                            item.routine_id = response.data.routine
+                        }
+                    } )
+                    // reviews.map(item => {
+                    //     if (item.routine_id._id == dataToEdit) {
+                    //         item.routine_id = response.data.routine
+                    //     }
+                    // })
+        
+                    setModalEditVisible(false)
+                    setSequenceRoutine('')
+                    setDataToEdit('')
+                }).catch((err) => {
+                    setLoadingButton(false)
+
+                    console.log(err)
+                    if (err == 'Error: Request failed with status code 500') {
+                        alert("Erro interno do servidor, tente novamente mais tarde!")
+                    } else if (err = 'Error: Network Error') {
+                        alert("Sessão expirada!")
+                        logoutContext()
+                    } else {
+                        alert('Houve um erro ao tentar salvar sua sequência no banco de dados, tente novamente!')
+                    }
+                })
+            }
         } else {
             alert('SEQUÊNCIA NÃO EDITADA. Você não pode criar uma sequência vazia, preencha todos os campos corretamente!')
             setModalEditVisible(false)
@@ -308,14 +326,20 @@ const RoutineScreen = (props) => {
                         handleConfirmModalButton={handleCloseModalAndAdd}
                         modalCardHeight={390}
                     >
-                        <TextInput
-                            style={styles.modalRoutineInput}
-                            keyboardType={"number-pad"}
-                            value={sequenceRoutine}
-                            onChangeText={handleOnInputChange}
-                            textAlign="center"
-                            placeholder="1-3-7-15-21-30"
-                        />
+                        {
+                            loadingButton
+                            ?
+                            <ActivityIndicator size="large" color="#303030" />
+                            :
+                            <TextInput
+                                style={styles.modalRoutineInput}
+                                keyboardType={"number-pad"}
+                                value={sequenceRoutine}
+                                onChangeText={handleOnInputChange}
+                                textAlign="center"
+                                placeholder="1-3-7-15-21-30"
+                            />
+                        }
                         <View style={styles.routineModalInfoBox}>
                             <Text style={styles.routineModalInfoText}>
                                 Insira a sequência que deseja criar, digite os números e utilize o sinal <Text style={{fontWeight: 'bold'}}>-</Text> para separá-los. <Text style={{fontWeight: 'bold'}}>Exemplo: 1-3-7-14-21-30</Text>
@@ -342,16 +366,22 @@ const RoutineScreen = (props) => {
                         handleConfirmModalButton={handleCloseModalAndEdit}
                         modalCardHeight={390}
                     >
-                        <TextInput
-                            style={styles.modalRoutineInput}
-                            keyboardType={"number-pad"}
-                            value={sequenceRoutine}
-                            onChangeText={handleOnInputChange}
-                            textAlign="center"
-                            placeholder="1-3-7-15-21-30"
-                        />
+                        {
+                            loadingButton
+                            ?
+                            <ActivityIndicator size="large" color="#303030" />
+                            :
+                            <TextInput
+                                style={styles.modalRoutineInput}
+                                keyboardType={"number-pad"}
+                                value={sequenceRoutine}
+                                onChangeText={handleOnInputChange}
+                                textAlign="center"
+                                placeholder="1-3-7-15-21-30"
+                            />
+                        }
                         <View style={styles.routineModalInfoBox}>
-                        <Text style={styles.routineModalInfoText}>
+                            <Text style={styles.routineModalInfoText}>
                                 Insira a sequência que deseja criar, digite os números e utilize o sinal <Text style={{fontWeight: 'bold'}}>-</Text> para separá-los. <Text style={{fontWeight: 'bold'}}>Exemplo: 1-3-7-14-21-30</Text>
                                 {'\n'}
                                 {'\n'}
