@@ -484,7 +484,11 @@ const ReviewsScreen = (props) => {
             if(response["android.permission.READ_EXTERNAL_STORAGE"] == 'denied') {
                 alert('Precisamos dessa permissão para apresentar a imagem associada. Por favor realize o processo novamente!')
             } else {
-                setImageReview(image[0])
+                if (premium) {
+                    setImageReview(image)
+                } else {
+                    setImageReview(image[0])
+                }
                 setHandleOpenImageModal(true)
             }
         }).catch((err) => {
