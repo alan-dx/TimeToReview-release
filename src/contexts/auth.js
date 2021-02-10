@@ -15,6 +15,7 @@ export const AuthProvider = (props) => {
     const [allReviews, setAllReviews] = useState([])
     const [performance, setPerformance] = useState([])
     const [lastWeekPerformance, setLastWeekPerformance] = useState([])
+    const [premium, setPremium] = useState(false)
 
     async function loadServerData() {
         const currentDate = new Date()
@@ -149,8 +150,8 @@ export const AuthProvider = (props) => {
 
     return (
         <AuthContext.Provider value={{
-            signed: token, user: user, setUser, signInContext, signUpContext, 
-            logoutContext, loadUserReviews, routines, setRoutines, subjects, setToken,
+            signed: token, user: user, setUser, signInContext, signUpContext, premium,
+            setPremium,logoutContext, loadUserReviews, routines, setRoutines, subjects, setToken,
             setSubjects, reviews, setReviews, loadServerData, allReviews, setAllReviews, 
             performance, setPerformance, lastWeekPerformance, setLastWeekPerformance}}>
             {props.children}

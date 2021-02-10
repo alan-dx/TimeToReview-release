@@ -17,13 +17,8 @@ import CustomModal from '../../components/CustomModal';
 
 const HomeScreen = () => {
 
-    //OPÇÕES (PRO) => REVISÕES, ROTINAS, MATÉRIAS, LISTAR TODAS AS REVISÕES, CONFIGURAÇÕES, SOBRE
-    //OPÇÕES (BASIC) => REVISÕES, ROTINAS, LISTAR TODAS AS REVISÕES, MATÉRIAS, CONFIGURAÇÕES, TORNE-SE PREMIUM
-
-    //Gambi? => As react navigation goBack does not cause the screen to render again, the chart was not updating. That was the only functional solution I found.
-
     const navigation = useNavigation()
-    const { performance, subjects, routines, allReviews, setReviews } = useContext(AuthContext);
+    const { performance, subjects, routines, allReviews, setReviews, premium, setPremium } = useContext(AuthContext);
     const [numberOfReviews, setNumberOfReviews] = useState(0)
     const [isLoading] = useState(false)
     const [dataChart, setData] = useState(performance)
