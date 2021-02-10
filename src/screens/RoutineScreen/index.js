@@ -15,7 +15,7 @@ import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@r
 
 const RoutineScreen = (props) => {
 
-    const {routines, setRoutines, logoutContext, allReviews} = useContext(AuthContext)
+    const {routines, setRoutines, logoutContext, allReviews, premium} = useContext(AuthContext)
 
     useEffect(() => {
         console.log(routines)
@@ -89,22 +89,27 @@ const RoutineScreen = (props) => {
     //User tutorial
 
     function handleOpenAddModal() {
-        if (routines.length < 3) {
+        if (premium) {
             setSequenceRoutine('')
             setModalAddVisible(true)
         } else {
-            Alert.alert(
-                "Ops...",
-                "Você só pode criar até três sequências de revisão na versão gratuita do TimeToReview. Caso deseje criar sequências ilimitadamente, adquira a versão Premium.",
-                [
-                  {
-                    text: "Ok",
-                    onPress: () => {},
-                    style: "cancel"
-                  },
-                ],
-                { cancelable: false }
-              );
+            if (routines.length < 3) {
+                setSequenceRoutine('')
+                setModalAddVisible(true)
+            } else {
+                Alert.alert(
+                    "Ops...",
+                    "Você só pode criar até três sequências de revisão na versão gratuita do TimeToReview. Caso deseje criar sequências ilimitadamente, adquira a versão Premium.",
+                    [
+                      {
+                        text: "Ok",
+                        onPress: () => {},
+                        style: "cancel"
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+            }
         }
     }
 
@@ -406,22 +411,25 @@ const RoutineScreen = (props) => {
                     : null
                 }
             </View>
-            <View style={styles.adBox}>
-                <BannerAd
-                    unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    // unitId={TestIds.BANNER}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{
-                        requestNonPersonalizedAdsOnly: true
-                    }}
-                    onAdLoaded={() => {
-                        console.log('Advert loaded')
-                    }}
-                    onAdFailedToLoad={(error) => {
-                    console.error('Advert failed to load: ', error);}}
-                />
-                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
-            </View>
+            {
+                !premium &&
+                    <View style={styles.adBox}>
+                        <BannerAd
+                            unitId={"ca-app-pub-9301871566936075/8490963413"}
+                            // unitId={TestIds.BANNER}
+                            size={BannerAdSize.BANNER}
+                            requestOptions={{
+                                requestNonPersonalizedAdsOnly: true
+                            }}
+                            onAdLoaded={() => {
+                                console.log('Advert loaded')
+                            }}
+                            onAdFailedToLoad={(error) => {
+                            console.error('Advert failed to load: ', error);}}
+                        />
+                        <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
+                    </View>
+            }
         </>
     )
     

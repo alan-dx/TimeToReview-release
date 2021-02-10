@@ -15,7 +15,7 @@ import { InterstitialAd, AdEventType, BannerAd, TestIds, BannerAdSize } from '@r
 
 const SubjectScreen = (props) => {
 
-    const { subjects, setSubjects, allReviews } = useContext(AuthContext)
+    const { subjects, setSubjects, allReviews, premium } = useContext(AuthContext)
     const [data, setData] = useState(subjects)
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
 
@@ -72,23 +72,29 @@ const SubjectScreen = (props) => {
     const navigation = useNavigation()
 
     function handlePressGoToAddSubjectScreen() {
-        if (subjects.length < 8) {
+        if (premium) {
             navigation.navigate("AddSubjectScreen", {
                 onGoBack: handleUpdateDataOnAdd
             })
         } else {
-            Alert.alert(
-                "Ops...",
-                "Você só pode criar até oito disciplinas na versão gratuita do TimeToReview. Caso deseje criar disciplinas ilimitadamente, adquira a versão Premium.",
-                [
-                  {
-                    text: "Ok",
-                    onPress: () => {},
-                    style: "cancel"
-                  },
-                ],
-                { cancelable: false }
-              );
+            if (subjects.length < 8) {
+                navigation.navigate("AddSubjectScreen", {
+                    onGoBack: handleUpdateDataOnAdd
+                })
+            } else {
+                Alert.alert(
+                    "Ops...",
+                    "Você só pode criar até oito disciplinas na versão gratuita do TimeToReview. Caso deseje criar disciplinas ilimitadamente, adquira a versão Premium.",
+                    [
+                      {
+                        text: "Ok",
+                        onPress: () => {},
+                        style: "cancel"
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+            }
         }
     }
 
@@ -174,22 +180,25 @@ const SubjectScreen = (props) => {
                     : null
                 }
             </View>
-            <View style={styles.adBox}>
-                <BannerAd
-                    unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    // unitId={TestIds.BANNER}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{
-                        requestNonPersonalizedAdsOnly: true
-                    }}
-                    onAdLoaded={() => {
-                        console.log('Advert loaded')
-                    }}
-                    onAdFailedToLoad={(error) => {
-                    console.error('Advert failed to load: ', error);}}
-                />
-                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
-            </View>
+            {
+                !premium && 
+                <View style={styles.adBox}>
+                    <BannerAd
+                        unitId={"ca-app-pub-9301871566936075/8490963413"}
+                        // unitId={TestIds.BANNER}
+                        size={BannerAdSize.BANNER}
+                        requestOptions={{
+                            requestNonPersonalizedAdsOnly: true
+                        }}
+                        onAdLoaded={() => {
+                            console.log('Advert loaded')
+                        }}
+                        onAdFailedToLoad={(error) => {
+                        console.error('Advert failed to load: ', error);}}
+                    />
+                    <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
+                </View>
+            }
         </>
     )
     

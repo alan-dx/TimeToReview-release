@@ -329,7 +329,7 @@ const HomeScreen = () => {
                         </Text>
                     </View>
                     <TouchableHighlight style={styles.bePremiumModalCustomButton} underlayColor={"#72c3eb"} onPress={() => {
-                        ToastAndroid.show('Em breve', 600)
+                        setPremium(true)
                     }}>
                         <Text style={styles.bePremiumModalCustomButtonText}>VAMOS-LÁ!</Text>
                     </TouchableHighlight>

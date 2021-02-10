@@ -24,7 +24,7 @@ const ReviewsScreen = (props) => {
 
     const currentDate = new Date()
 
-    const { reviews, subjects, routines, allReviews, setAllReviews, performance, setPerformance, logoutContext } = useContext(AuthContext)
+    const { reviews, subjects, routines, allReviews, setAllReviews, performance, setPerformance, logoutContext, premium } = useContext(AuthContext)
 
     const [data, setData] = useState(reviews)
     const [dataCycles, setDataCycles] = useState(performance[currentDate.getDay()].cycles)
@@ -43,6 +43,7 @@ const ReviewsScreen = (props) => {
     const cycleFlatList = useRef(null)
 
     useEffect(() => {//pass params to Header
+        console.log(premium)
         
         navigation.setParams({//cause the warn error: "SET_PARAMS dont handled by any navigator...", but don't worry is working fine
             finishCycleActive: startController,
@@ -582,22 +583,25 @@ const ReviewsScreen = (props) => {
                     /> : null
                 }
             </View>
-            <View style={styles.adBox}>
-                <BannerAd
-                    unitId={"ca-app-pub-9301871566936075/8490963413"}
-                    // unitId={TestIds.BANNER}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{
-                        requestNonPersonalizedAdsOnly: true
-                    }}
-                    onAdLoaded={() => {
-                        console.log('Advert loaded')
-                    }}
-                    onAdFailedToLoad={(error) => {
-                    console.error('Advert failed to load: ', error);}}
-                />
-                <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
-            </View>
+            {
+                !premium &&
+                <View style={styles.adBox}>
+                    <BannerAd
+                        unitId={"ca-app-pub-9301871566936075/8490963413"}
+                        // unitId={TestIds.BANNER}
+                        size={BannerAdSize.BANNER}
+                        requestOptions={{
+                            requestNonPersonalizedAdsOnly: true
+                        }}
+                        onAdLoaded={() => {
+                            console.log('Advert loaded')
+                        }}
+                        onAdFailedToLoad={(error) => {
+                        console.error('Advert failed to load: ', error);}}
+                    />
+                    <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
+                </View>
+            }
         </>
     )
     
