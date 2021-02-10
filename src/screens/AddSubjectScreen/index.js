@@ -18,7 +18,7 @@ const AddSubjectScreen = (props) => {
 
     const navigation = useNavigation()
 
-    const { logoutContext } = useContext(AuthContext)
+    const { logoutContext, premium } = useContext(AuthContext)
     const [titleSubject, setTitleSubject] = useState('')
     const [markerSubject, setMarkerSubject] = useState('')
     const [loadedAd, setLoadedAd] = useState(false)
@@ -26,20 +26,22 @@ const AddSubjectScreen = (props) => {
 
     //InterstialAd Setup
     useEffect(() => {
-        const eventListener = interstitial.onAdEvent(type => {
-            if (type === AdEventType.LOADED) {
-                console.log('carregou')
-                setLoadedAd(true);
-            }
-            });
-        
-            // Start loading the interstitial straight away
-            interstitial.load();
-        
-            // Unsubscribe from events on unmount
-            return () => {
-            eventListener();
+        if (!premium) {
+            const eventListener = interstitial.onAdEvent(type => {
+                if (type === AdEventType.LOADED) {
+                    console.log('carregou')
+                    setLoadedAd(true);
+                }
+                });
+            
+                // Start loading the interstitial straight away
+                interstitial.load();
+            
+                // Unsubscribe from events on unmount
+                return () => {
+                eventListener();
             };
+        }
     }, [])
     //InterstialAd Setup
 
@@ -60,7 +62,7 @@ const AddSubjectScreen = (props) => {
                     marker: markerSubject
                 }).then((response) => {
     
-                    if (loadedAd) {
+                    if (loadedAd && !premium) {
                         interstitial.show()
                     }
     

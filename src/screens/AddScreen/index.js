@@ -24,7 +24,7 @@ const interstitial = InterstitialAd.createForAdRequest("ca-app-pub-9301871566936
 
 const AddScreen = (props) => {
 
-    const {routines, subjects, setAllReviews, allReviews, user, logoutContext} = useContext(AuthContext)
+    const {routines, subjects, setAllReviews, allReviews, user, premium, logoutContext} = useContext(AuthContext)
 
     const [titleReview, setTitleReview] = useState('')
     const [trackAudioReview, setTrackAudioReview] = useState(null)
@@ -46,20 +46,22 @@ const AddScreen = (props) => {
 
     //InterstialAd Setup
     useEffect(() => {
-        const eventListener = interstitial.onAdEvent(type => {
-            if (type === AdEventType.LOADED) {
-                console.log('carregou')
-                setLoadedAd(true);
-            }
-            });
-        
-            // Start loading the interstitial straight away
-            interstitial.load();
-        
-            // Unsubscribe from events on unmount
-            return () => {
-            eventListener();
+        if (!premium) {
+            const eventListener = interstitial.onAdEvent(type => {
+                if (type === AdEventType.LOADED) {
+                    console.log('carregou')
+                    setLoadedAd(true);
+                }
+                });
+            
+                // Start loading the interstitial straight away
+                interstitial.load();
+            
+                // Unsubscribe from events on unmount
+                return () => {
+                eventListener();
             };
+        }
     }, [])
     //InterstialAd Setup
 
@@ -197,53 +199,106 @@ const AddScreen = (props) => {
     
     async function handleImageSelector() {
 
-        try {
+        if (premium) {
+            try {
             
-            const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.images],
-            });
-            
-            let url;
-            
-            await RNFetchBlob.fs
-            .stat(res.uri)
-            .then((stats) => {
-                console.log(stats.path)
-                url = `${stats.path}`
-            })
-            .catch((err) => {
-                url = null
-                Alert.alert(
-                    "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
-                    "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema. \n\n"+
-                    "Primeiro, verifique se as permissões solicitadas foram dadas.\n\n"+
-                    "Além disso, esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. Você pode tentar solucionar navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
-                    "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
-                    [
-                        {
-                            text: "Ok, vou tentar de novo.",
-                            onPress: () => console.log("Cancel Pressed"),
-                            style: "cancel"
-                        }
-                    ],
-                    { cancelable: false }
-                    );
+                const res = await DocumentPicker.pickMultiple({
+                    type: [DocumentPicker.types.images],
+                });
+    
+                let url = []
+                
+                res.forEach(async (item) => {
+                    await RNFetchBlob.fs
+                    .stat(item.uri)
+                    .then((stats) => {
+                        url.push(`${stats.path}`)
+                        console.log(url)
+                    })
+                    .catch((err) => {
+                        url = []
+                        console.log(url)
+                        Alert.alert(
+                            "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
+                            "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema. \n\n"+
+                            "Primeiro, verifique se as permissões solicitadas foram dadas.\n\n"+
+                            "Além disso, esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. Você pode tentar solucionar navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
+                            "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
+                            [
+                                {
+                                    text: "Ok, vou tentar de novo.",
+                                    onPress: () => console.log("Cancel Pressed"),
+                                    style: "cancel"
+                                }
+                            ],
+                            { cancelable: false }
+                            );
+                    });
+                })
+                //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
+                if (url != []) {
+                    setImageReview(url)
+                }
+                    
+                } catch (err) {
+                    if (DocumentPicker.isCancel(err)) {
+                        // User cancelled the picker, exit any dialogs or menus and move on
+                        console.log('cancelou')
+                    } else {
+                        console.log(err)
+                    alert('Houve um erro ao selecionar o arquivo, tente novamente!')
+                }
+            }
+        } else {
+            try {
+                
+                const res = await DocumentPicker.pick({
+                    type: [DocumentPicker.types.images],
                 });
                 
-                //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
-                if (url) {
-                    setImageReview([url])
-                }
+                let url;
                 
-            } catch (err) {
-                if (DocumentPicker.isCancel(err)) {
-                    // User cancelled the picker, exit any dialogs or menus and move on
-                    console.log('cancelou')
-                } else {
-                    console.log(err)
-                alert('Houve um erro ao selecionar o arquivo, tente novamente!')
+                await RNFetchBlob.fs
+                .stat(res.uri)
+                .then((stats) => {
+                    console.log(stats.path)
+                    url = `${stats.path}`
+                })
+                .catch((err) => {
+                    url = null
+                    Alert.alert(
+                        "Ops, algo de errado aconteceu, mas vamos tentar de novo!",
+                        "Não foi possível selecionar o arquivo desejado, mas você pode contornar esse problema. \n\n"+
+                        "Primeiro, verifique se as permissões solicitadas foram dadas.\n\n"+
+                        "Além disso, esse erro costuma ocorrer em alguns dispositivos ao tentar selecionar um arquivo na aba RECENTES (a primeira tela exibida) do navegador de arquivos. Você pode tentar solucionar navegando entre as pastas do seu smartphone, procurando e selecionando o arquivo quando pressionar a opção novamente.\n\n"+
+                        "OBS.: Não se esqueça de ativar a opção 'Visualizar armazenamento interno' nas opções no canto superior direito do navegador de arquivos.",
+                        [
+                            {
+                                text: "Ok, vou tentar de novo.",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "cancel"
+                            }
+                        ],
+                        { cancelable: false }
+                        );
+                    });
+                    
+                    //ASSOCIAR AUDIO DIRETO DO GOOGLE DRIVE
+                    if (url) {
+                        setImageReview([url])
+                    }
+                    
+                } catch (err) {
+                    if (DocumentPicker.isCancel(err)) {
+                        // User cancelled the picker, exit any dialogs or menus and move on
+                        console.log('cancelou')
+                    } else {
+                        console.log(err)
+                    alert('Houve um erro ao selecionar o arquivo, tente novamente!')
+                }
             }
         }
+
     }
 
     async function handleCreateReview() {
@@ -267,7 +322,8 @@ const AddScreen = (props) => {
                     date: currentDate
                 }).then((response) => {
 
-                    if (loadedAd) {
+                    if (loadedAd && !premium) {
+                        console.log('1111111111 chamou')
                         interstitial.show()
                     }
                     
