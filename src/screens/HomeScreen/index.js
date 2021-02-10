@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ScreenTutorial from '../../components/ScreenTutorial';
 import logoImage from '../../assets/images/icons/logo.png';
 import CustomModal from '../../components/CustomModal';
+import TipsModal from '../../components/TipsModal';
 
 const HomeScreen = () => {
 
@@ -24,6 +25,7 @@ const HomeScreen = () => {
     const [dataChart, setData] = useState(performance)
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
     const [handleOpenBePremiumModal, setHandleOpenBePremiumModal] = useState(false)
+    const [handleOpenTipsModal, setHandleOpenTipsModal] = useState(false)
     const [handelShowTips0, setHandleShowTips0] = useState(false)
 
     useEffect(() => {
@@ -129,6 +131,16 @@ const HomeScreen = () => {
         </Text>
     </View>
 
+    let Step5_P = <View style={stylesSteps.container}>
+        <Icon2 style={{marginBottom: 10}} name="trending-up" size={35} color="#303030" />
+        <Text style={stylesSteps.desciptionText}>
+            Obrigado por adquirir o TimeToReview Premium!
+            {"\n"}
+            {"\n"}
+            Agora você tem acesso a todos os benefícios e atualizações futuras dessa versão, muitas novidades virão, então mantenha o app sempre atualizado.
+        </Text>
+    </View>
+
     let Step6 = <View style={stylesSteps.container}>
         <Icon2 style={{marginBottom: 10}} name="moon" size={35} color="#303030" />
         <Text style={stylesSteps.desciptionText}>
@@ -206,6 +218,25 @@ const HomeScreen = () => {
         setHandleOpenBePremiumModal(false)
     }
 
+    async function handleShowTipsModal() {
+
+        const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeOpenTips")
+        
+        if (!firstTimeOnScreen) {
+            await AsyncStorage.setItem('@TTR:firstTimeOpenTips', 'true')
+            setHandleShowTips0(true)
+            setHandleOpenTipsModal(true)
+        } else {
+            setHandleShowTips0(false)
+            setHandleOpenTipsModal(true)
+        }
+
+    }
+
+    async function handleCloseTipsModal() {
+        setHandleOpenTipsModal(false)
+    }
+
     function handleClickGoToAllReviewsScreen() {
         navigation.navigate("AllReviewsScreen")
     }
@@ -250,9 +281,17 @@ const HomeScreen = () => {
                     </MenuButton>
                 </View>
                 <View style={styles.menuItemBox}>
-                    <MenuButton color="#FFF" textColor="#303030" onPress={handleOpenBePremium} title="Seja Premium">
-                        <Icon2 name="trending-up" size={28} color="#303030" />
-                    </MenuButton>
+                    {
+                        premium 
+                        ? 
+                        <MenuButton color="#FFF" textColor="#303030" onPress={handleShowTipsModal} title="Dicas de Estudo">
+                            <Icon name="bulb1" size={28} color="#303030" />
+                        </MenuButton>
+                        :
+                        <MenuButton color="#FFF" textColor="#303030" onPress={handleOpenBePremium} title="Seja Premium">
+                            <Icon2 name="trending-up" size={28} color="#303030" />
+                        </MenuButton>
+                    }
                 </View>
                 <View style={styles.menuItemBox}>
                     <MenuButton color="#FFF" textColor="#303030" onPress={handleClickGoToSettingScreen} title="Configurações">
@@ -263,13 +302,13 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={[Step0, Step1, Step2, Step3, Step4, Step5, Step6]} 
+                steps={premium ? [Step0, Step1, Step2, Step3, Step6, Step5_P] : [Step0, Step1, Step2, Step3, Step4, Step5, Step6]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null
         }
         {
-            handleOpenBePremiumModal ? 
+            handleOpenBePremiumModal && !premium ? 
                 <CustomModal
                     modalVisible={handleOpenBePremiumModal}
                     handleCloseModalButton={handleCloseBePremium}
@@ -295,6 +334,13 @@ const HomeScreen = () => {
                         <Text style={styles.bePremiumModalCustomButtonText}>VAMOS-LÁ!</Text>
                     </TouchableHighlight>
                 </CustomModal> : null
+        }
+        {
+            handleOpenTipsModal && premium ? 
+                <TipsModal
+                    handleCloseModal={handleCloseTipsModal}
+                    handelShowTips0={handelShowTips0}
+                /> : null
         }
     </>
 

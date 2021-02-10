@@ -15,7 +15,7 @@ export const AuthProvider = (props) => {
     const [allReviews, setAllReviews] = useState([])
     const [performance, setPerformance] = useState([])
     const [lastWeekPerformance, setLastWeekPerformance] = useState([])
-    const [premium, setPremium] = useState(false)
+    const [premium, setPremium] = useState(true)
 
     async function loadServerData() {
         const currentDate = new Date()
