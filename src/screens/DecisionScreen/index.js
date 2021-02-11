@@ -34,7 +34,7 @@ const DecisionLogin = () => {
                     <CustomButton text="LOGIN" color='#e74e36' onPress={handleClickNavigateToSignIn} />
                     <CustomButton text="CADASTRO" color='#60c3eb' onPress={handleClickNavigateToSignUp}/>
                 </View>
-                <Text style={styles.devText}>Por: Alan Almeida</Text>
+                <Text style={styles.devText}>Por: AlmeidaDev</Text>
             </View>
         </View>
     )

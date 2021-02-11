@@ -299,7 +299,7 @@ const SettingScreen = (props) => {
                     </RectButton>
                     <RectButton style={styles.optionContainer} 
                         onPress={() => {
-                            ToastAndroid.show('Em breve', 600)
+                            Linking.openURL("https://play.google.com/store/apps/details?id=com.ttr_release")
                         }} 
                     >
                         <Text style={styles.optionText}>Avaliar o aplicativo</Text>
@@ -420,13 +420,13 @@ const SettingScreen = (props) => {
                             objetivo é promover a melhor experiência possível para nossos usuários.
                             {'\n'}
                             {'\n'}
-                            - Email: contato_almeidadev@gmail.com
+                            - Email: contato.almeidadev@gmail.com
                         </Text>
                     </View>
                     <TouchableHighlight style={styles.reportModalCustomButton} underlayColor={"#72c3eb"} onPress={() => {
                         openComposer({
-                            to: 'suportettr@gmail.com',
-                            subject: 'O que deseja relatar?',
+                            to: 'contato.almeidadev@gmail.com',
+                            subject: '[TimeToReview] Insira o motivo do contato',
                             })
                     }} >
                         <Text style={styles.reportModalCustomButtonText}>CONTATE</Text>

@@ -21,6 +21,7 @@ import VerifyPassScreen from '../screens/VerifyPassScreen';
 import ChangePassScreen from '../screens/ChangePassScreen';
 import AboutScreen from '../screens/AboutScreen';
 import NotesScreen from '../screens/NotesScreen';
+import BePremiumScreen from '../screens/BePremiumScreen';
 
 const {Screen, Navigator} = createStackNavigator()
 
@@ -79,6 +80,14 @@ const AppRoutes = () => {
                     options={{
                         headerShown: true,
                         header: () => <Header title="CONFIGURAÇÕES" color="#FCFCFC" />
+                    }} 
+                />
+                <Screen 
+                    name="BePremiumScreen" 
+                    component={BePremiumScreen}
+                    options={{
+                        headerShown: true,
+                        header: () => <Header title="SEJA PREMIUM" color="#FCFCFC" />
                     }} 
                 />
                 <Screen 

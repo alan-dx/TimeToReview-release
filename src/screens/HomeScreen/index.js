@@ -241,6 +241,10 @@ const HomeScreen = () => {
         navigation.navigate("AllReviewsScreen")
     }
 
+    function handleGoToBePremiumScreen() {
+        navigation.navigate("BePremiumScreen")
+    }
+
     const homeDash = <>
         <View style={styles.graphBox}>
             <Text style={styles.graphBoxTitle}>Você possui {numberOfReviews} {numberOfReviews == 1 ? 'revisão pendente!' : 'revisões pendentes!'}</Text>
@@ -288,7 +292,7 @@ const HomeScreen = () => {
                             <Icon name="bulb1" size={28} color="#303030" />
                         </MenuButton>
                         :
-                        <MenuButton color="#FFF" textColor="#303030" onPress={handleOpenBePremium} title="Seja Premium">
+                        <MenuButton color="#FFF" textColor="#303030" onPress={/*handleOpenBePremium*/ handleGoToBePremiumScreen} title="Seja Premium">
                             <Icon2 name="trending-up" size={28} color="#303030" />
                         </MenuButton>
                     }
