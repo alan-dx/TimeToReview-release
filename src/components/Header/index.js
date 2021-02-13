@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect } from 'react';
-import {View, Text } from 'react-native';
+import {View, Text, Alert } from 'react-native';
 import styles from './styles';
 import { BorderlessButton } from  'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -32,7 +32,22 @@ const Header = (props) => {
     }
 
     function handleLogout() {
-        logoutContext();
+        Alert.alert(
+            "Sair da conta",
+            "Você tem certeza que deseja sair de sua conta?",
+            [
+              {
+                text: "Cancelar",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "Sim, eu quero!", onPress: () => {
+                  logoutContext();
+              }}
+            ],
+            { cancelable: false }
+          );
+
     }
 
     return (

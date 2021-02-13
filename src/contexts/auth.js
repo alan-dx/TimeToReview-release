@@ -151,7 +151,7 @@ export const AuthProvider = (props) => {
     return (
         <AuthContext.Provider value={{
             signed: token, user: user, setUser, signInContext, signUpContext, premium,
-            setPremium,logoutContext, loadUserReviews, routines, setRoutines, subjects, setToken,
+            setPremium, logoutContext, loadUserReviews, routines, setRoutines, subjects, setToken,
             setSubjects, reviews, setReviews, loadServerData, allReviews, setAllReviews, 
             performance, setPerformance, lastWeekPerformance, setLastWeekPerformance}}>
             {props.children}

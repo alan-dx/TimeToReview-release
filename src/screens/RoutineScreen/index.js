@@ -93,13 +93,13 @@ const RoutineScreen = (props) => {
             setSequenceRoutine('')
             setModalAddVisible(true)
         } else {
-            if (routines.length < 3) {
+            if (routines.length < 5) {
                 setSequenceRoutine('')
                 setModalAddVisible(true)
             } else {
                 Alert.alert(
                     "Ops...",
-                    "Você só pode criar até três sequências de revisão na versão gratuita do TimeToReview. Caso deseje criar sequências ilimitadamente, adquira a versão Premium.",
+                    "Você só pode criar até cinco sequências de revisão na versão gratuita do TimeToReview. Caso deseje criar sequências ilimitadamente, adquira a versão Premium.",
                     [
                       {
                         text: "Ok",
@@ -417,7 +417,7 @@ const RoutineScreen = (props) => {
                         <BannerAd
                             unitId={"ca-app-pub-9301871566936075/8490963413"}
                             // unitId={TestIds.BANNER}
-                            size={BannerAdSize.BANNER}
+                            size={BannerAdSize.FULL_BANNER}
                             requestOptions={{
                                 requestNonPersonalizedAdsOnly: true
                             }}
@@ -427,7 +427,7 @@ const RoutineScreen = (props) => {
                             onAdFailedToLoad={(error) => {
                             console.error('Advert failed to load: ', error);}}
                         />
-                        <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
+                        <Text style={styles.adBoxLabel}>Área reservada para anúncios. Remova os anúncios adquirindo a versão Premium do TimeToReview</Text>
                     </View>
             }
         </>

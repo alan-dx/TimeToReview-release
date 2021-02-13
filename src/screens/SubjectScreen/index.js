@@ -77,14 +77,14 @@ const SubjectScreen = (props) => {
                 onGoBack: handleUpdateDataOnAdd
             })
         } else {
-            if (subjects.length < 8) {
+            if (subjects.length < 10) {
                 navigation.navigate("AddSubjectScreen", {
                     onGoBack: handleUpdateDataOnAdd
                 })
             } else {
                 Alert.alert(
-                    "Ops...",
-                    "Você só pode criar até oito disciplinas na versão gratuita do TimeToReview. Caso deseje criar disciplinas ilimitadamente, adquira a versão Premium.",
+                    "Limite alcançado!",
+                    "Você só pode criar até dez disciplinas na versão gratuita do TimeToReview. Caso deseje criar disciplinas ilimitadamente, adquira a versão Premium.",
                     [
                       {
                         text: "Ok",
@@ -186,7 +186,7 @@ const SubjectScreen = (props) => {
                     <BannerAd
                         unitId={"ca-app-pub-9301871566936075/8490963413"}
                         // unitId={TestIds.BANNER}
-                        size={BannerAdSize.BANNER}
+                        size={BannerAdSize.FULL_BANNER}
                         requestOptions={{
                             requestNonPersonalizedAdsOnly: true
                         }}
@@ -196,7 +196,8 @@ const SubjectScreen = (props) => {
                         onAdFailedToLoad={(error) => {
                         console.error('Advert failed to load: ', error);}}
                     />
-                    <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
+                    <Text style={styles.adBoxLabel}>Área reservada para anúncios. Remova os anúncios adquirindo a versão Premium do TimeToReview</Text>
+
                 </View>
             }
         </>

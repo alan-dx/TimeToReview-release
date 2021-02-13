@@ -11,14 +11,15 @@ const styles = StyleSheet.create({
     adBox: {
         width: '100%',
         backgroundColor: '#FCFCFC',
+        borderTopColor: '#DDD',
+        borderTopWidth: 1,
 
         alignItems: 'center',
         justifyContent: 'center'
     },
     adBoxLabel: {
         fontFamily: 'Archivo-Medium',
-        color: '#FFFFFF',
-        fontSize: 14,
+        fontSize: 12,
         color: '#303030',
         textAlign: 'center',
 

@@ -593,7 +593,7 @@ const ReviewsScreen = (props) => {
                     <BannerAd
                         unitId={"ca-app-pub-9301871566936075/8490963413"}
                         // unitId={TestIds.BANNER}
-                        size={BannerAdSize.BANNER}
+                        size={BannerAdSize.FULL_BANNER}
                         requestOptions={{
                             requestNonPersonalizedAdsOnly: true
                         }}
@@ -603,7 +603,7 @@ const ReviewsScreen = (props) => {
                         onAdFailedToLoad={(error) => {
                         console.error('Advert failed to load: ', error);}}
                     />
-                    <Text style={styles.adBoxLabel}>Área para anúncios.</Text>
+                    <Text style={styles.adBoxLabel}>Área reservada para anúncios. Remova os anúncios adquirindo a versão Premium do TimeToReview</Text>
                 </View>
             }
         </>
