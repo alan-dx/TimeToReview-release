@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     logoBox: {
         backgroundColor: '#FFF',
         width: '90%',
-        minHeight: 300,
+        minHeight: 350,
         borderRadius: 15,
         
         alignItems: 'center',
@@ -40,6 +40,23 @@ const styles = StyleSheet.create({
         
         marginTop: 10
 
+    },
+    appTitle: {
+        fontFamily: 'DancingScript-Bold',
+        fontSize: 25,
+        color: '#303030',
+        textAlign: 'center',
+    },
+    appPriceLabel: {
+        fontFamily: 'Archivo-SemiBold',
+        fontSize: 12,
+        marginBottom: -5
+    },
+    appPrice: {
+        fontFamily: 'Poppins-SemiBold',
+        fontSize: 22,
+        color: '#303030',
+        textAlign: 'center',
     }
 })
 

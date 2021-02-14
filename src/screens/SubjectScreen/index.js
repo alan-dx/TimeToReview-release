@@ -186,7 +186,7 @@ const SubjectScreen = (props) => {
                     <BannerAd
                         unitId={"ca-app-pub-9301871566936075/8490963413"}
                         // unitId={TestIds.BANNER}
-                        size={BannerAdSize.FULL_BANNER}
+                        size={BannerAdSize.SMART_BANNER}
                         requestOptions={{
                             requestNonPersonalizedAdsOnly: true
                         }}
