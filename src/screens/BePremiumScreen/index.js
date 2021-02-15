@@ -10,14 +10,14 @@ import Icon3 from 'react-native-vector-icons/Feather';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import logo from '../../assets/images/icons/logo.png';
-import { ScrollView } from 'react-native-gesture-handler';
+import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import BenefitsCard from '../../components/BenefitsCard';
 import CustomModal from '../../components/CustomModal';
 
 const BePremiumScreen = (props) => {
 
-    const {setPremium} = useContext(AuthContext)
-    const [products, setProducts] = useState([{title: 'nao foi', priceAmount: '0.00'}])
+    const {setPremium, premium} = useContext(AuthContext)
+    const [products, setProducts] = useState([{title: 'indisponível', priceAmount: 'X.XX'}])
     const [handleTermModal, setHandleTermModal] = useState(false)
     const navigation = useNavigation()
 
@@ -82,7 +82,13 @@ const BePremiumScreen = (props) => {
                 "Por favor, restaure a sua compra para tentar corrigir o problema",
                 [
                   {text: 'Cancel', style: 'cancel'},
-                  {text: 'Ok, Restaurar!', onPress: () => Iaphub.restore()}
+                  {text: 'Ok, Restaurar!', onPress: async () => {
+                    await Iaphub.restore().then((res) => {
+                      navigation.navigate("PreLoadScreen")
+                    }).catch((err) => {
+                      alert('Não foi possível restaurar a compra, verifique se a sua conta na Google Play Store é a mesma na qual comprou os recursos Premium.')
+                    })
+                  }}
                 ]
               );
             }
@@ -125,10 +131,12 @@ const BePremiumScreen = (props) => {
             else if (err.code == "receipt_request_failed") {
               Alert.alert(
                 "Problemas na validação da compra",
-                "Houve um problema na validação da transação, tente restaurar a compra. Se o problema persistir, a Google Play irá reembolsar a compra após 3 dias úteis. Do contrário, entre em contato com nossa equipe.",
+                "Houve um problema na validação da transação, tente reiniciar o aplicativo. Se o problema persistir, a Google Play irá reembolsar a compra após 3 dias úteis. Do contrário, entre em contato com nossa equipe.",
                 [
                   {text: 'Cancel', style: 'cancel'},
-                  {text: 'Ok, Restaurar!', onPress: () => Iaphub.restore()}
+                  {text: 'Ok!', onPress: () => {
+                    navigation.navigate("PreLoadScreen")
+                  }}
                 ]
               );
             }
@@ -158,27 +166,34 @@ const BePremiumScreen = (props) => {
               <View style={styles.logoBox}>
                   <Text style={styles.appTitle}>TimeToReview - Premium</Text>
                   <Image source={logo} style={{width: 250, height: 250}} />
-                  <Text style={styles.appPriceLabel}>Por apenas:</Text>
-                  <Text style={styles.appPrice}>R$ {products[0].priceAmount}</Text>
+                  {
+                    premium ? 
+                    <Text style={styles.appPrice}>Você já é Premium!</Text>
+                    :
+                    <>
+                      <Text style={styles.appPriceLabel}>Por apenas:</Text>
+                      <Text style={styles.appPrice}>R$ {products[0].priceAmount}</Text>
+                    </>
+                  }
               </View>
             {/* <Text style={{textAlign: 'center'}}>{products[0].title}, Preço:{products[0].priceAmount}, SKU: {products[0].sku}</Text> */}
             <ScrollView
               showsHorizontalScrollIndicator
               alwaysBounceHorizontal
               horizontal
-              contentContainerStyle={[styles.scrollContainer, {paddingHorizontal: Dimensions.get("screen").width / 8}]}
+              contentContainerStyle={[styles.scrollContainer]}
               // contentOffset={{x: 260, y: 0}}
               decelerationRate="normal"
             >
               <BenefitsCard>
-                <Text style={styles.benefitTitleLabel}>Sem Anúncios!</Text>
-                <Icon3 name="airplay" size={70} color="#303030" />
-                <Text style={styles.benefitLabel}>- Remoção de todos os anúncios dentro do aplicativo.</Text>
-              </BenefitsCard>
-              <BenefitsCard>
                 <Text style={styles.benefitTitleLabel}>Múltiplas Imagens</Text>
                 <Icon name="switcher" size={70} color="#303030" />
                 <Text style={styles.benefitLabel}>- Anexe quantas imagens desejar nas suas revisões.</Text>
+              </BenefitsCard>
+              <BenefitsCard>
+                <Text style={styles.benefitTitleLabel}>Sem Anúncios!</Text>
+                <Icon3 name="airplay" size={70} color="#303030" />
+                <Text style={styles.benefitLabel}>- Remoção de todos os anúncios dentro do aplicativo.</Text>
               </BenefitsCard>
               <BenefitsCard>
                 <Text style={styles.benefitTitleLabel}>Não há limites!</Text>
@@ -196,16 +211,50 @@ const BePremiumScreen = (props) => {
                 <Text style={styles.benefitLabel}>- Você terá acesso a todas futuras funcionalidades excluisvas da versão Premium.</Text>
               </BenefitsCard>
             </ScrollView>
-            <Text onPress={() => setHandleTermModal(true)} style={styles.termLabel}>Termos e condições de compra</Text>
+            <View style={styles.termLabelBox}>
+              <Text onPress={() => setHandleTermModal(true)} style={styles.termLabel}>Termos e condições</Text>
+              {
+                !premium &&
+                <> 
+                  <Text style={[styles.termLabel, {textDecorationLine: 'none'}]}>|</Text>
+                  <Text onPress={async () => {
+
+                      await Iaphub.restore().then((res) => {
+                        navigation.navigate("PreLoadScreen")
+                        Alert.alert(
+                          "Compra restaurada!",
+                          "Sua compra foi restaurada com sucesso! Os recursos premium serão liberados em breve.",
+                          [
+                              {
+                                text: "Ok!",
+                                onPress: () => {
+                                  setPremium(true)
+                                },
+                                style: "cancel"
+                              }
+                            ],
+                            { cancelable: false }
+                        );
+                      }).catch((err) => {
+                        alert('Não foi possível restaurar a compra, verifique se a sua conta na Google Play Store é a mesma na qual comprou os recursos Premium.')
+                      })
+
+                  }} style={[styles.termLabel, {textDecorationLine: 'none'}]}>Restaurar</Text>
+                </>
+              }
+            </View>
             <View style={{marginVertical: 10, width: '100%', alignSelf: 'center', alignItems: 'center'}}>
+              {!premium
+                &&
                 <CustomButton text="COMPRAR" color='#e74e36' onPress={handleBuyButton}/>
+              }
             </View>
             {
                 handleTermModal ? <CustomModal 
                     modalVisible={handleTermModal}
                     handleCloseModalButton={() => setHandleTermModal(false)}
                     modalCardHeight={400}
-                    modalTitle="TERMOS DE COMPRA"
+                    modalTitle="TERMOS E CONDIÇÕES"
                     doNotShowCheckButton
                 >
                    <ScrollView contentContainerStyle={styles.termBox}>
@@ -214,10 +263,12 @@ const BePremiumScreen = (props) => {
                       Android compatíveis com a Google Play Store. Se quiser usar os recursos Premium em outros dispositivos, é precisao refazer a compra. Mas você pode usar a mesma conta
                       para sincronizar os dados após a compra.</Text>
                       <Text style={styles.termItemLabel}>3. A versão Premium é associada a sua conta da Google Play Store (ou seja, o seu aparelho Android), portanto se você tentar acessar a sua conta TimeToReview em outro dispositivo, que também tenha o aplicativo instalado, só
-                      será possível acessar os recursos Premium caso a versão instalada no mesmo também seja a versão Premium. </Text>
-                      <Text style={styles.termItemLabel}>4. Todo o processo de compra e pagamento é gerido pela Google Play. Sendo assim, se o seu pagamento não for aprovado, consulte a <Text onPress={() => Linking.openURL("https://support.google.com/googleplay/answer/1050566?hl=pt-BR")} style={{textDecorationLine: "underline", color: '#60c3eb'}}>Ajuda do Google Play </Text> 
+                      será possível acessar os recursos Premium caso a versão instalada no mesmo também seja a versão Premium.</Text>
+                      <Text style={styles.termItemLabel}>4. O usuário pode restaurar a compra, recuperando, assim, os recursos da versão Premium. Para fazer isso, o usuário deve logar na Google Play Store com a MESMA conta na qual comprou o TimeToReview - Premium,
+                      depois basta clicar no botão "Restaurar" que os recursos serão liberados.</Text>
+                      <Text style={styles.termItemLabel}>5. Todo o processo de compra e pagamento é gerido pela Google Play. Sendo assim, se o seu pagamento não for aprovado, consulte a <Text onPress={() => Linking.openURL("https://support.google.com/googleplay/answer/1050566?hl=pt-BR")} style={{textDecorationLine: "underline", color: '#60c3eb'}}>Ajuda do Google Play </Text> 
                        e tente identificar o problema (Como desenvolvedores de aplicativos, não temos os direitos de processar questões relacionadas ao pagamento).</Text>
-                      <Text style={styles.termItemLabel}>5. Com as atualizações do sistema Android, pode haver limitações nas novas funções que impedem o correto funcionamento das funções antigas.
+                      <Text style={styles.termItemLabel}>6. Com as atualizações do sistema Android, pode haver limitações nas novas funções que impedem o correto funcionamento das funções antigas.
                       Pedimos descuplas por qualquer transtorno, faremos o possível para corrigir os problemas.</Text>
                       <Text style={[styles.termItemLabel, {textAlign: 'center'}]}>Ao realizar a compra, você concorda com todos os termos e condições acima!</Text>
                    </ScrollView>

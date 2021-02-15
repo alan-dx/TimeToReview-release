@@ -60,9 +60,15 @@ const DoubtsScreen = (props) => {
             title: '"Aplicativo em Dark Mode"',
             info: 'Se você utiliza o Dark Mode (Tema escuro) em seu dispositivo o aplicativo também ira adequar as cores para se adaptar ao tema,'+
             ' entretanto, dependendo da versão de seu Android, a adaptação de cores pode não ser perfeita em algumas telas, porém, isso não interfere no uso da aplicação.',
-            key: 6,
+            key: '6',
             height: 190
         },
+        {
+            title: 'Restaurar Premium',
+            info: 'O usuário pode restaurar a compra, recuperando, assim, os recursos da versão Premium. Para fazer isso, o usuário deve logar na Google Play Store com a MESMA conta na qual comprou o TimeToReview - Premium, depois basta clicar no botão restaurar (na tela "Seja Premium") que os recursos serão liberados.',
+            key: '7',
+            height: 190
+        }
     ])
 
     function handleCloseDoubtModal() {

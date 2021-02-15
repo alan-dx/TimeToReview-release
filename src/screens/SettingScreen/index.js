@@ -306,6 +306,10 @@ const SettingScreen = (props) => {
                         <Text style={styles.optionText}>Avaliar o aplicativo</Text>
                         <Icon name="chevron-right" size={20} color="#60c3eb" />
                     </RectButton>
+                    <RectButton style={styles.optionContainer} onPress={() => navigation.navigate("BePremiumScreen")}>
+                        <Text style={styles.optionText}>Recursos Premium</Text>
+                        <Icon name="chevron-right" size={20} color="#60c3eb" />
+                    </RectButton>
                     <RectButton style={styles.optionContainer} onPress={handleRestartTutorial}>
                         <Text style={styles.optionText}>Reiniciar o tutorial</Text>
                         <Icon name="chevron-right" size={20} color="#60c3eb" />

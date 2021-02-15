@@ -47,7 +47,7 @@ const VerifyAccountMailScreen = () => {
                     ?
                     <>
                         <Icon name="check-circle" size={60} color="#303030" />
-                        <Text style={styles.infoText}>Você já confirmou a sua conta!</Text>
+                        <Text style={styles.infoText}>Você já verificou a sua conta!</Text>
                     </>
                     :
                     <>

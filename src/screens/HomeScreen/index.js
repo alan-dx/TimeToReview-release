@@ -20,7 +20,7 @@ import notifications from '../../services/notifications';
 const HomeScreen = () => {
 
     const navigation = useNavigation()
-    const { performance, subjects, routines, allReviews, setReviews, premium, setPremium } = useContext(AuthContext);
+    const { performance, subjects, routines, allReviews, setReviews, premium, setPremium, user } = useContext(AuthContext);
     const [numberOfReviews, setNumberOfReviews] = useState(0)
     const [isLoading] = useState(false)
     const [dataChart, setData] = useState(performance)
@@ -37,7 +37,7 @@ const HomeScreen = () => {
     //verifing if is the first time open app
     useEffect(() => {
 
-        async function handleFirstTimeOnApp() {
+        async function handleFirstTimeOpenApp() {
 
             const firstTimeOnApp = await AsyncStorage.getItem("@TTR:firstTimeOnApp")
     
@@ -68,7 +68,7 @@ const HomeScreen = () => {
 
         }
 
-        handleFirstTimeOnApp()
+        handleFirstTimeOpenApp()
     }, [])
     //verifing if is the first time open app
 
@@ -216,6 +216,35 @@ const HomeScreen = () => {
 
     }
     //User tutorial
+
+    useEffect(() => {
+
+        async function handleShowMailVerifyAlert() {
+            console.log('*****************')
+
+            const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeHomeScreen")
+            if (!user.verifiedAccount && firstTimeOnScreen) {
+                console.log('asdasdsadasd')
+                const num = Math.floor(Math.random() * 4)
+                if (num == 2) {
+                    Alert.alert(
+                        "Verifique sua conta!",
+                        "Sua conta ainda não foi verificada, para obter melhor experiência com o uso de nosso App é recomendável realizar o procedimento, garantindo que processos, como recuperação de senha, ocorram corretamente.",
+                        [
+                            {text: 'Lembre-me depois', style: 'cancel'},
+                            {text: 'Vamos confirmar!', onPress: async () => {
+                                navigation.navigate("VerifyAccountMailScreen")
+                            }}
+                        ]
+                    );
+                }
+            }
+
+        }
+
+        handleShowMailVerifyAlert()
+
+    }, [])
 
     function handleClickGoToReviewsScreen() {
         navigation.navigate('ReviewsScreen', {

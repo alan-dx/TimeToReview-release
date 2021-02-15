@@ -3,6 +3,7 @@ import { View, ActivityIndicator, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AuthContext from '../../contexts/auth';
 import Iaphub from 'react-native-iaphub';
+import { getUniqueId } from 'react-native-device-info';
 
 const PreLoadScreen = () => {
 
@@ -52,13 +53,14 @@ const PreLoadScreen = () => {
                 environment: "production"
             });
 
-            await Iaphub.setUserId(response.data._id);
+            await Iaphub.setUserId(getUniqueId());
             
             var products = await Iaphub.getActiveProducts();
 
             if (products[0]) {
                 setPremium(true)
             }
+            // alert(getUniqueId())
 
             //iap setup
 

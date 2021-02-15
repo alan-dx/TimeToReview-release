@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     scrollContainer: {
-        padding: 5,
+        paddingVertical: 5,
+        paddingHorizontal: '3%',
         marginTop: 10
     },
     benefitTitleLabel: {
@@ -63,7 +64,15 @@ const styles = StyleSheet.create({
         color: '#303030',
         textDecorationLine: 'underline',
 
-        marginTop: 10
+        marginTop: 10,
+        marginHorizontal: 5
+    },
+    termLabelBox: {
+        flexDirection: 'row',
+        width: '80%',
+
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     termBox: {
         padding: 10,
