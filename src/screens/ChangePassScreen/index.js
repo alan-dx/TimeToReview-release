@@ -15,7 +15,6 @@ const ChangePassScreen = () => {
     const [password, setPassword] = useState()
     const [cPassword, setCPassword] = useState()
 
-
     function handleCheckPass() {
         if (password != cPassword) {
             return alert('As senhas não conferem, verifique e tente novamente!')
@@ -29,11 +28,11 @@ const ChangePassScreen = () => {
                 console.log(err)
                 if (err == 'Error: Request failed with status code 401') {
                     alert("Redefinição não autorizada, tente novamente!")
-                } else if (err = 'Error: Network Error') {
+                } else if (err == 'Error: Network Error') {
                     alert("Sessão expirada!")
                     logoutContext()
                 } else {
-                    alert('Houve um erro durante ao verificar sua senha, tente novamente.')
+                    alert('Houve um erro ao verificar sua senha, tente novamente.')
                 }
             })
         }

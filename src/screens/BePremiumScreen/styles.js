@@ -57,6 +57,27 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: '#303030',
         textAlign: 'center',
+    },
+    termLabel: {
+        fontFamily: 'Archivo-Bold',
+        color: '#303030',
+        textDecorationLine: 'underline',
+
+        marginTop: 10
+    },
+    termBox: {
+        padding: 10,
+
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    termItemLabel: {
+        fontFamily: 'Archivo-SemiBold',
+        fontSize: 14,
+        color: '#303030',
+
+        textAlign: 'justify',
+        marginBottom: 5
     }
 })
 

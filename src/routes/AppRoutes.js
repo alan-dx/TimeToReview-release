@@ -22,6 +22,8 @@ import ChangePassScreen from '../screens/ChangePassScreen';
 import AboutScreen from '../screens/AboutScreen';
 import NotesScreen from '../screens/NotesScreen';
 import BePremiumScreen from '../screens/BePremiumScreen';
+import VerifyAccountScreen from '../screens/VerifyAccountScreen';
+import VerifyAccountMailScreen from '../screens/VerifyAccountMailScreen';
 
 const {Screen, Navigator} = createStackNavigator()
 
@@ -112,6 +114,22 @@ const AppRoutes = () => {
                     options={({ navigation, route }) => ({
                         headerShown: true,
                         header: () => <Header route={route} navigation={navigation} title="SEU PERFIL" color="#FCFCFC" />
+                    })}
+                />
+                <Screen 
+                    name="VerifyAccountMailScreen"
+                    component={VerifyAccountMailScreen}
+                    options={({ navigation, route }) => ({
+                        headerShown: true,
+                        header: () => <Header title="VERIFICAR CONTA" color="#FCFCFC" />
+                    })}
+                />
+                <Screen 
+                    name="VerifyAccountScreen" 
+                    component={VerifyAccountScreen}
+                    options={({ navigation, route }) => ({
+                        headerShown: true,
+                        header: () => <Header title="" color="#FCFCFC" />
                     })}
                 />
                 <Screen 

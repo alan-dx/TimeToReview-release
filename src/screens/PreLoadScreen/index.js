@@ -6,7 +6,7 @@ import Iaphub from 'react-native-iaphub';
 
 const PreLoadScreen = () => {
 
-    const { setSubjects, setUser, setRoutines, setAllReviews, loadServerData, setPerformance, logoutContext, setLastWeekPerformance} = useContext(AuthContext);
+    const { setSubjects, setUser, setRoutines, setAllReviews, loadServerData, setPerformance, logoutContext, setLastWeekPerformance, setPremium} = useContext(AuthContext);
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -18,7 +18,8 @@ const PreLoadScreen = () => {
             setUser({
                 name: response.data.name,
                 email: response.data.email,
-                reminderTime: response.data.reminderTime
+                reminderTime: response.data.reminderTime,
+                verifiedAccount: response.data.verifiedAccount
             })
             setSubjects(response.data.subjects)
             setRoutines(response.data.routines)
@@ -41,17 +42,24 @@ const PreLoadScreen = () => {
             setPerformance(response.data.performance)
             //app general config
 
-            //iap setup
-            // await Iaphub.init({
-            //     // The app id is available on the settings page of your app
-            //     appId: "6023f89a1dc86c0ec39828c5",
-            //     // The (client) api key is available on the settings page of your app
-            //     apiKey: "xoOYooCfWoPWGAqk5lp9yfgq56PUfMB",
-            //     // App environment (production by default, other environments must be created on the IAPHUB dashboard)
-            //     environment: "production"
-            // });
+            // iap setup
+            await Iaphub.init({
+                // The app id is available on the settings page of your app
+                appId: "6023f89a1dc86c0ec39828c5",
+                // The (client) api key is available on the settings page of your app
+                apiKey: "xoOYooCfWoPWGAqk5lp9yfgq56PUfMB",
+                // App environment (production by default, other environments must be created on the IAPHUB dashboard)
+                environment: "production"
+            });
 
-            // await Iaphub.setUserId(response.data._id);
+            await Iaphub.setUserId(response.data._id);
+            
+            var products = await Iaphub.getActiveProducts();
+
+            if (products[0]) {
+                setPremium(true)
+            }
+
             //iap setup
 
             navigation.reset({

@@ -110,19 +110,19 @@ const SettingScreen = (props) => {
             //Para remover o aviso no dia em que foi setado bote + 1 no dia
 
             notifications
-                .configure()
-                .localNotificationSchedule(
-                    {
-                        channelId: "default-channel-id",
-                        title:'TimeToReview!',
-                        message:`É hora de revisar, vamos lá? Não deixe pra depois...`,
-                        date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), reminderTime.getHours(), reminderTime.getMinutes(), reminderTime.getSeconds()),
-                        vibrate:500,
-                        priority: "high",
-                        repeatType: "day",
-                        allowWhileIdle: true
-                    }
-                )
+            .configure()
+            .localNotificationSchedule(
+                {
+                    channelId: "default-channel-id",
+                    title:'TimeToReview!',
+                    message:`É hora de revisar, vamos lá? Não deixe pra depois...`,
+                    date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), reminderTime.getHours(), reminderTime.getMinutes(), reminderTime.getSeconds()),
+                    vibrate:500,
+                    priority: "high",
+                    repeatType: "day",
+                    allowWhileIdle: true
+                }
+            )
         }).catch((err) => {
             console.log(err)
                 if (err == 'Error: Request failed with status code 500') {
@@ -299,7 +299,8 @@ const SettingScreen = (props) => {
                     </RectButton>
                     <RectButton style={styles.optionContainer} 
                         onPress={() => {
-                            Linking.openURL("https://play.google.com/store/apps/details?id=com.ttr_release")
+                            // Linking.openURL("https://play.google.com/store/apps/details?id=com.ttr_release")
+                            Linking.openURL("market://details?id=com.ttr_release")
                         }} 
                     >
                         <Text style={styles.optionText}>Avaliar o aplicativo</Text>
@@ -311,6 +312,10 @@ const SettingScreen = (props) => {
                     </RectButton>
                     <RectButton style={styles.optionContainer} onPress={() => setHandleReportModal(true)}>
                         <Text style={styles.optionText}>Entre em contato</Text>
+                        <Icon name="chevron-right" size={20} color="#60c3eb" />
+                    </RectButton>
+                    <RectButton style={styles.optionContainer} onPress={() => navigation.navigate("VerifyAccountMailScreen")}>
+                        <Text style={styles.optionText}>Verificar conta</Text>
                         <Icon name="chevron-right" size={20} color="#60c3eb" />
                     </RectButton>
                     <RectButton style={styles.optionContainer} onPress={() => navigation.navigate("DoubtsScreen")}>

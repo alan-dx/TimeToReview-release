@@ -22,11 +22,11 @@ const VerifyPassScreen = () => {
             console.log(err)
             if (err == 'Error: Request failed with status code 401') {
                 alert("Senha Incorreta! Verifique e tente novamente.")
-            } else if (err = 'Error: Network Error') {
+            } else if (err == 'Error: Network Error') {
                 alert("Sessão expirada!")
                 logoutContext()
             } else {
-                alert('Houve um erro durante ao verificar sua senha, tente novamente.')
+                alert('Houve um erro ao verificar sua senha, tente novamente.')
             }
         })
     }

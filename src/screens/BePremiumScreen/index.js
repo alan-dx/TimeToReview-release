@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, Alert, Image, Dimensions } from 'react-native'
+import { View, Text, Alert, Image, Dimensions, Linking } from 'react-native'
 import CustomButton from '../../components/CustomButton';
 import styles from './styles';
 import Iaphub from 'react-native-iaphub';
@@ -12,27 +12,30 @@ import { useNavigation } from '@react-navigation/native';
 import logo from '../../assets/images/icons/logo.png';
 import { ScrollView } from 'react-native-gesture-handler';
 import BenefitsCard from '../../components/BenefitsCard';
+import CustomModal from '../../components/CustomModal';
 
 const BePremiumScreen = (props) => {
 
     const {setPremium} = useContext(AuthContext)
     const [products, setProducts] = useState([{title: 'nao foi', priceAmount: '0.00'}])
+    const [handleTermModal, setHandleTermModal] = useState(false)
     const navigation = useNavigation()
 
-    // useEffect(() => {
-    //     async function loadProducts() {
-    //         var products = await Iaphub.getProductsForSale();
-    //         alert[products[0].title]
+    useEffect(() => {
+        async function loadProducts() {
+            var products = await Iaphub.getProductsForSale();
+            alert[products[0].title]
 
-    //         setProducts(products)
-    //     }
+            setProducts(products)
+        }
 
-    //     loadProducts()
-    // }, [])
+        loadProducts()
+    }, [])
 
     async function handleBuyButton() {
         try {
             var transaction = await Iaphub.buy(products[0].sku, {
+              crossPlatformConflict: false,
               // Optional property to override the default proration mode on Android (https://developer.android.com/reference/com/android/billingclient/api/BillingFlowParams.ProrationMode)
               androidProrationMode: 1,
               // Optional callback triggered before the receipt is processed
@@ -49,8 +52,8 @@ const BePremiumScreen = (props) => {
              */
             if (transaction.webhookStatus == "failed") {
               Alert.alert(
-                "Purchase delayed",
-                "Your purchase was successful but we need some more time to validate it, should arrive soon! Otherwise contact the support (contato.almeidadev@gmail.com)"
+                "Compra em processamento",
+                "Sua compra foi bem-sucedida, mas precisamos de mais algum tempo para validá-la, os recursos Premium serão liberados em breve! Caso contrário, entre em contato com o suporte (contato.almeidadev@gmail.com) "
               );
             }
             // Everything was successful! Yay!
@@ -75,19 +78,19 @@ const BePremiumScreen = (props) => {
             // Couldn't buy product because it has been bought in the past but hasn't been consumed (restore needed)
             if (err.code == "product_already_owned") {
               Alert.alert(
-                "Product already owned",
-                "Please restore your purchases in order to fix that issue",
+                "Você já possui esse produto!",
+                "Por favor, restaure a sua compra para tentar corrigir o problema",
                 [
                   {text: 'Cancel', style: 'cancel'},
-                  {text: 'Restore', onPress: () => Iaphub.restore()}
+                  {text: 'Ok, Restaurar!', onPress: () => Iaphub.restore()}
                 ]
               );
             }
             // The payment has been deferred (its final status is pending external action such as 'Ask to Buy')
             else if (err.code == "deferred_payment") {
               Alert.alert(
-                "Purchase awaiting approval",
-                "Your purchase has been processed but is awaiting approval"
+                "Compra aguardando confirmação",
+                "Sua compra foi processada, mas está aguardando aprovação."
               );
             }
             /*
@@ -99,8 +102,8 @@ const BePremiumScreen = (props) => {
              */
             else if (err.code == "receipt_validation_failed") {
               Alert.alert(
-                "We're having trouble validating your transaction",
-                "Give us some time, we'll retry to validate your transaction ASAP!"
+                "Estamos enfrentando problemas",
+                "Estamos com alguns problemas na validação de sua compra, estamos trabalhando para corrigir isso!"
               );
             }
             /*
@@ -109,8 +112,8 @@ const BePremiumScreen = (props) => {
              */
             else if (err.code == "receipt_invalid") {
               Alert.alert(
-                "Purchase error recepit",
-                "We were not able to process your purchase, if you've been charged please contact the support (support@myapp.com)"
+                "Comprovante inválido",
+                "Não foi possível processar sua compra, se você foi cobrado, entre em contato com o suporte (contato.almeidadev@gmail.com)"
               );
             }
             /*
@@ -121,8 +124,12 @@ const BePremiumScreen = (props) => {
              */
             else if (err.code == "receipt_request_failed") {
               Alert.alert(
-                "We're having trouble validating your transaction",
-                "Please try to restore your purchases later (Button in the settings) or contact the support (support@myapp.com)"
+                "Problemas na validação da compra",
+                "Houve um problema na validação da transação, tente restaurar a compra. Se o problema persistir, a Google Play irá reembolsar a compra após 3 dias úteis. Do contrário, entre em contato com nossa equipe.",
+                [
+                  {text: 'Cancel', style: 'cancel'},
+                  {text: 'Ok, Restaurar!', onPress: () => Iaphub.restore()}
+                ]
               );
             }
             /*
@@ -130,17 +137,17 @@ const BePremiumScreen = (props) => {
              * This security has been implemented to prevent a user from ending up with two subscriptions of different platforms
              * You can disable the security by providing the 'crossPlatformConflict' parameter to the buy method (Iaphub.buy(sku, {crossPlatformConflict: false}))
              */
-            else if (err.code == "cross_platform_conflict") {
-              Alert.alert(
-                `Seems like you already have a subscription on ${err.params.platform}`,
-                `You have to use the same platform to change your subscription or wait for your current subscription to expire`
-              );
-            }
+            // else if (err.code == "cross_platform_conflict") {
+            //   Alert.alert(
+            //     `Seems like you already have a subscription on ${err.params.platform}`,
+            //     `You have to use the same platform to change your subscription or wait for your current subscription to expire`
+            //   );
+            // }
             // Couldn't buy product for many other reasons (the user shouldn't be charged)
             else {
               Alert.alert(
-                "Purchase error",
-                "We were not able to process your purchase, please try again later or contact the support (support@myapp.com)"
+                "Erro na compra",
+                "Não foi possível processar sua compra, tente novamente mais tarde."
               );
             }
           }
@@ -152,7 +159,7 @@ const BePremiumScreen = (props) => {
                   <Text style={styles.appTitle}>TimeToReview - Premium</Text>
                   <Image source={logo} style={{width: 250, height: 250}} />
                   <Text style={styles.appPriceLabel}>Por apenas:</Text>
-                  <Text style={styles.appPrice}>R$ 14.99</Text>
+                  <Text style={styles.appPrice}>R$ {products[0].priceAmount}</Text>
               </View>
             {/* <Text style={{textAlign: 'center'}}>{products[0].title}, Preço:{products[0].priceAmount}, SKU: {products[0].sku}</Text> */}
             <ScrollView
@@ -189,9 +196,33 @@ const BePremiumScreen = (props) => {
                 <Text style={styles.benefitLabel}>- Você terá acesso a todas futuras funcionalidades excluisvas da versão Premium.</Text>
               </BenefitsCard>
             </ScrollView>
+            <Text onPress={() => setHandleTermModal(true)} style={styles.termLabel}>Termos e condições de compra</Text>
             <View style={{marginVertical: 10, width: '100%', alignSelf: 'center', alignItems: 'center'}}>
                 <CustomButton text="COMPRAR" color='#e74e36' onPress={handleBuyButton}/>
             </View>
+            {
+                handleTermModal ? <CustomModal 
+                    modalVisible={handleTermModal}
+                    handleCloseModalButton={() => setHandleTermModal(false)}
+                    modalCardHeight={400}
+                    modalTitle="TERMOS DE COMPRA"
+                    doNotShowCheckButton
+                >
+                   <ScrollView contentContainerStyle={styles.termBox}>
+                      <Text style={styles.termItemLabel}>1. A versão Premium é uma compra única. Uma vez desbloqueada, você pode usar todos os recursos da versão atual.</Text>
+                      <Text style={styles.termItemLabel}>2. Devido a restrições na transferência de produtos virtuais entre plataformas, esta versão é válida apenas para dispositivos
+                      Android compatíveis com a Google Play Store. Se quiser usar os recursos Premium em outros dispositivos, é precisao refazer a compra. Mas você pode usar a mesma conta
+                      para sincronizar os dados após a compra.</Text>
+                      <Text style={styles.termItemLabel}>3. A versão Premium é associada a sua conta da Google Play Store (ou seja, o seu aparelho Android), portanto se você tentar acessar a sua conta TimeToReview em outro dispositivo, que também tenha o aplicativo instalado, só
+                      será possível acessar os recursos Premium caso a versão instalada no mesmo também seja a versão Premium. </Text>
+                      <Text style={styles.termItemLabel}>4. Todo o processo de compra e pagamento é gerido pela Google Play. Sendo assim, se o seu pagamento não for aprovado, consulte a <Text onPress={() => Linking.openURL("https://support.google.com/googleplay/answer/1050566?hl=pt-BR")} style={{textDecorationLine: "underline", color: '#60c3eb'}}>Ajuda do Google Play </Text> 
+                       e tente identificar o problema (Como desenvolvedores de aplicativos, não temos os direitos de processar questões relacionadas ao pagamento).</Text>
+                      <Text style={styles.termItemLabel}>5. Com as atualizações do sistema Android, pode haver limitações nas novas funções que impedem o correto funcionamento das funções antigas.
+                      Pedimos descuplas por qualquer transtorno, faremos o possível para corrigir os problemas.</Text>
+                      <Text style={[styles.termItemLabel, {textAlign: 'center'}]}>Ao realizar a compra, você concorda com todos os termos e condições acima!</Text>
+                   </ScrollView>
+                </CustomModal> : null
+            }
         </View>
     )
 }

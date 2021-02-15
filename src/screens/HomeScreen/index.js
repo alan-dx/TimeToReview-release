@@ -15,6 +15,7 @@ import ScreenTutorial from '../../components/ScreenTutorial';
 import logoImage from '../../assets/images/icons/logo.png';
 import CustomModal from '../../components/CustomModal';
 import TipsModal from '../../components/TipsModal';
+import notifications from '../../services/notifications';
 
 const HomeScreen = () => {
 
@@ -24,7 +25,6 @@ const HomeScreen = () => {
     const [isLoading] = useState(false)
     const [dataChart, setData] = useState(performance)
     const [handleOpenTutorialModal, setHandleOpenTutorialModal] = useState(false)
-    const [handleOpenBePremiumModal, setHandleOpenBePremiumModal] = useState(false)
     const [handleOpenTipsModal, setHandleOpenTipsModal] = useState(false)
     const [handelShowTips0, setHandleShowTips0] = useState(false)
 
@@ -33,6 +33,44 @@ const HomeScreen = () => {
             ToastAndroid.show('Aplicativo em Dark Mode, cores alteradas pelo próprio dispositivo!', 2800)
         }
     }, [])
+
+    //verifing if is the first time open app
+    useEffect(() => {
+
+        async function handleFirstTimeOnApp() {
+
+            const firstTimeOnApp = await AsyncStorage.getItem("@TTR:firstTimeOnApp")
+    
+            if (!firstTimeOnApp) {
+                console.log('calll')
+                const currentDate = new Date()
+                currentDate.setHours(8,30,0,0)
+                console.log(currentDate)
+    
+                notifications
+                .configure()
+                .localNotificationSchedule(
+                    {
+                        channelId: "default-channel-id",
+                        title:'TimeToReview!',
+                        message:`É hora de revisar, vamos lá? Não deixe pra depois...`,
+                        date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds()),
+                        vibrate:500,
+                        priority: "high",
+                        repeatType: "day",
+                        allowWhileIdle: true
+                    }
+                )
+    
+                await AsyncStorage.setItem('@TTR:firstTimeOnApp', 'true')
+    
+            }
+
+        }
+
+        handleFirstTimeOnApp()
+    }, [])
+    //verifing if is the first time open app
 
     useFocusEffect(
         useCallback(() => {
@@ -154,6 +192,20 @@ const HomeScreen = () => {
         </Text>
     </View>
 
+    let Step7 = <View style={stylesSteps.container}>
+    <Icon2 style={{marginBottom: 10}} name="mail" size={35} color="#303030" />
+    <Text style={stylesSteps.desciptionText}>
+        Verifique sua conta!
+        {"\n"}
+        {"\n"}
+        Para garantia de processos, como recuperação de senha e contato com o suporte, é de extremamente importância que você
+        confirme o email associado a sua conta.
+        {"\n"}
+        {"\n"}
+        Para fazer isso, basta verificar a sessão "Verificar conta" nas configurações.
+    </Text>
+    </View>
+
     async function checkIfItsTheFirstTime() { //See useFocusEffect
         const firstTimeOnScreen = await AsyncStorage.getItem("@TTR:firstTimeHomeScreen")
         console.log('first', firstTimeOnScreen)
@@ -206,16 +258,6 @@ const HomeScreen = () => {
                 { cancelable: false }
               );
         }
-    }
-
-    async function handleOpenBePremium() {
-
-        setHandleOpenBePremiumModal(true)
-
-    }
-
-    async function handleCloseBePremium() {
-        setHandleOpenBePremiumModal(false)
     }
 
     async function handleShowTipsModal() {
@@ -306,38 +348,10 @@ const HomeScreen = () => {
         </View>
         { handleOpenTutorialModal ? 
             <ScreenTutorial 
-                steps={premium ? [Step0, Step1, Step2, Step3, Step6, Step5_P] : [Step0, Step1, Step2, Step3, Step4, Step5, Step6]} 
+                steps={premium ? [Step0, Step1, Step2, Step3, Step6, Step5_P, Step7] : [Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7]} 
                 handleCloseModal={() => setHandleOpenTutorialModal(false)}
             /> :
             null
-        }
-        {
-            handleOpenBePremiumModal && !premium ? 
-                <CustomModal
-                    modalVisible={handleOpenBePremiumModal}
-                    handleCloseModalButton={handleCloseBePremium}
-                    modalCardHeight={300}
-                    modalTitle="SEJA PREMIUM"
-                    doNotShowCheckButton
-                >
-                    <View style={styles.bePremiumModalInfoBox}>
-                        <Text style={styles.bePremiumModalInfoText}>
-                            Obtenha a versão Premium do TimeToReview e tenha acesso aos seguintes benefícios: 
-                            {'\n'}
-                            {'\n'}
-                            {'\t'}{'\t'} - Associar múltiplas imagens na revisão;{'\n'}
-                            {'\t'}{'\t'} - Remoção de todos os anúncios;{'\n'}
-                            {'\t'}{'\t'} - Criação ilimitada de disciplinas;{'\n'}
-                            {'\t'}{'\t'} - Criação ilimitada de sequências;{'\n'}
-                            {'\t'}{'\t'} - Dicas de estudo;{'\n'}
-                        </Text>
-                    </View>
-                    <TouchableHighlight style={styles.bePremiumModalCustomButton} underlayColor={"#72c3eb"} onPress={() => {
-                        setPremium(true)
-                    }}>
-                        <Text style={styles.bePremiumModalCustomButtonText}>VAMOS-LÁ!</Text>
-                    </TouchableHighlight>
-                </CustomModal> : null
         }
         {
             handleOpenTipsModal && premium ? 
