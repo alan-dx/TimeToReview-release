@@ -23,8 +23,9 @@ const BePremiumScreen = (props) => {
 
     useEffect(() => {
         async function loadProducts() {
+            alert('entrou no use Effect')
             var products = await Iaphub.getProductsForSale();
-            alert[products[0].title]
+            alert[`${products[0].title} ---- `]
 
             setProducts(products)
         }
@@ -33,6 +34,11 @@ const BePremiumScreen = (props) => {
     }, [])
 
     async function handleBuyButton() {
+      alert('buy')
+      var products = await Iaphub.getProductsForSale();
+      alert(products[0].price)
+      setProducts[products]
+
         try {
             var transaction = await Iaphub.buy(products[0].sku, {
               crossPlatformConflict: false,
@@ -85,8 +91,6 @@ const BePremiumScreen = (props) => {
                   {text: 'Ok, Restaurar!', onPress: async () => {
                     await Iaphub.restore().then((res) => {
                       navigation.navigate("PreLoadScreen")
-                    }).catch((err) => {
-                      alert('Não foi possível restaurar a compra, verifique se a sua conta na Google Play Store é a mesma na qual comprou os recursos Premium.')
                     })
                   }}
                 ]
@@ -168,7 +172,7 @@ const BePremiumScreen = (props) => {
                   <Image source={logo} style={{width: 250, height: 250}} />
                   {
                     premium ? 
-                    <Text style={styles.appPrice}>Você já é Premium!</Text>
+                    <Text style={styles.appPrice}>Você já é Premium! {products[0].priceAmount}</Text>
                     :
                     <>
                       <Text style={styles.appPriceLabel}>Por apenas:</Text>
@@ -188,7 +192,7 @@ const BePremiumScreen = (props) => {
               <BenefitsCard>
                 <Text style={styles.benefitTitleLabel}>Múltiplas Imagens</Text>
                 <Icon name="switcher" size={70} color="#303030" />
-                <Text style={styles.benefitLabel}>- Anexe quantas imagens desejar nas suas revisões.</Text>
+                <Text style={styles.benefitLabel}>- Anexe quantaaas imagens desejar nas suas revisões.</Text>
               </BenefitsCard>
               <BenefitsCard>
                 <Text style={styles.benefitTitleLabel}>Sem Anúncios!</Text>
@@ -212,7 +216,13 @@ const BePremiumScreen = (props) => {
               </BenefitsCard>
             </ScrollView>
             <View style={styles.termLabelBox}>
-              <Text onPress={() => setHandleTermModal(true)} style={styles.termLabel}>Termos e condições</Text>
+              <Text onPress={async () => {
+                setHandleTermModal(true)
+                alert('buy')
+                var products = await Iaphub.getProductsForSale();
+                alert(products[0].price)
+                setProducts[products]
+                }} style={styles.termLabel}>Termos e condições</Text>
               {
                 !premium &&
                 <> 
@@ -221,22 +231,6 @@ const BePremiumScreen = (props) => {
 
                       await Iaphub.restore().then((res) => {
                         navigation.navigate("PreLoadScreen")
-                        Alert.alert(
-                          "Compra restaurada!",
-                          "Sua compra foi restaurada com sucesso! Os recursos premium serão liberados em breve.",
-                          [
-                              {
-                                text: "Ok!",
-                                onPress: () => {
-                                  setPremium(true)
-                                },
-                                style: "cancel"
-                              }
-                            ],
-                            { cancelable: false }
-                        );
-                      }).catch((err) => {
-                        alert('Não foi possível restaurar a compra, verifique se a sua conta na Google Play Store é a mesma na qual comprou os recursos Premium.')
                       })
 
                   }} style={[styles.termLabel, {textDecorationLine: 'none'}]}>Restaurar</Text>
@@ -244,7 +238,8 @@ const BePremiumScreen = (props) => {
               }
             </View>
             <View style={{marginVertical: 10, width: '100%', alignSelf: 'center', alignItems: 'center'}}>
-              {!premium
+              {/* {!premium */}
+              {true
                 &&
                 <CustomButton text="COMPRAR" color='#e74e36' onPress={handleBuyButton}/>
               }

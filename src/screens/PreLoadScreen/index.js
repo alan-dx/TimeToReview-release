@@ -58,6 +58,8 @@ const PreLoadScreen = () => {
             var products = await Iaphub.getActiveProducts();
 
             if (products[0]) {
+                alert('products')
+                alert(products)
                 setPremium(true)
             }
             // alert(getUniqueId())
