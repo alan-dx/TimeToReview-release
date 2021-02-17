@@ -13,166 +13,171 @@ import logo from '../../assets/images/icons/logo.png';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import BenefitsCard from '../../components/BenefitsCard';
 import CustomModal from '../../components/CustomModal';
+import api from '../../services/api';
+import { getUniqueId } from 'react-native-device-info';
+
 
 const BePremiumScreen = (props) => {
 
     const {setPremium, premium} = useContext(AuthContext)
-    const [products, setProducts] = useState([{title: 'indisponível', priceAmount: 'X.XX'}])
+    const [products, setProducts] = useState([{title: 'indisponível', priceAmount: '14.99'}])
     const [handleTermModal, setHandleTermModal] = useState(false)
     const navigation = useNavigation()
 
-    useEffect(() => {
-        async function loadProducts() {
-            alert('entrou no use Effect')
-            var products = await Iaphub.getProductsForSale();
-            alert[`${products[0].title} ---- `]
+    // useEffect(() => {
+    //   async function loadProducts() {
+    //     var productsA = await Iaphub.getProductsForSale();
+    //     alert[productsA[0].title]
 
-            setProducts(products)
-        }
+    //     setProducts(productsA)
+    //   }
 
-        loadProducts()
-    }, [])
+    //   loadProducts()
+    // }, [])
 
     async function handleBuyButton() {
-      alert('buy')
-      var products = await Iaphub.getProductsForSale();
-      alert(products[0].price)
-      setProducts[products]
 
-        try {
-            var transaction = await Iaphub.buy(products[0].sku, {
-              crossPlatformConflict: false,
-              // Optional property to override the default proration mode on Android (https://developer.android.com/reference/com/android/billingclient/api/BillingFlowParams.ProrationMode)
-              androidProrationMode: 1,
-              // Optional callback triggered before the receipt is processed
-              onReceiptProcess: (receipt) => {
-                console.log('Purchase success, processing receipt...');
-              }
-            });
-            console.log(transaction);
+      // var productsA = await Iaphub.getProductsForSale();
+      // alert[productsA[0].sku]
 
-            /*
-             * The purchase has been successful but we need to check that the webhook to our server was successful as well
-             * If the webhook request failed, IAPHUB will send you an alert and retry again in 1 minute, 10 minutes, 1 hour and 24 hours.
-             * You can retry the webhook directly from the dashboard as well
-             */
-            if (transaction.webhookStatus == "failed") {
-              Alert.alert(
-                "Compra em processamento",
-                "Sua compra foi bem-sucedida, mas precisamos de mais algum tempo para validá-la, os recursos Premium serão liberados em breve! Caso contrário, entre em contato com o suporte (contato.almeidadev@gmail.com) "
-              );
+      try {
+          var transaction = await Iaphub.buy("android.ttr.premium", {
+            crossPlatformConflict: false,
+            // Optional property to override the default proration mode on Android (https://developer.android.com/reference/com/android/billingclient/api/BillingFlowParams.ProrationMode)
+            androidProrationMode: 1,
+            // Optional callback triggered before the receipt is processed
+            onReceiptProcess: (receipt) => {
+              console.log('Purchase success, processing receipt...');
             }
-            // Everything was successful! Yay!
-            else {
-              Alert.alert(
-                "Compra bem sucedida",
-                "Sua compra foi realizada com sucesso! Muito obrigado, os recursos premium serão liberados em breve.",
-                [
-                    {
-                      text: "Ok!",
-                      onPress: () => {
-                        setPremium(true)
-                        navigation.navigate("PreLoadScreen")
-                      },
-                      style: "cancel"
-                    }
-                  ],
-                  { cancelable: false }
-              );
-            }
-          } catch (err) {
-            // Couldn't buy product because it has been bought in the past but hasn't been consumed (restore needed)
-            if (err.code == "product_already_owned") {
-              Alert.alert(
-                "Você já possui esse produto!",
-                "Por favor, restaure a sua compra para tentar corrigir o problema",
-                [
-                  {text: 'Cancel', style: 'cancel'},
-                  {text: 'Ok, Restaurar!', onPress: async () => {
-                    await Iaphub.restore().then((res) => {
-                      navigation.navigate("PreLoadScreen")
-                    })
-                  }}
-                ]
-              );
-            }
-            // The payment has been deferred (its final status is pending external action such as 'Ask to Buy')
-            else if (err.code == "deferred_payment") {
-              Alert.alert(
-                "Compra aguardando confirmação",
-                "Sua compra foi processada, mas está aguardando aprovação."
-              );
-            }
-            /*
-             * The receipt has been processed on IAPHUB but something went wrong
-             * It is probably because of an issue with the configuration of your app or a call to the Itunes/GooglePlay API that failed
-             * IAPHUB will send you an email notification when a receipt fails, by checking the receipt on the dashboard you'll find a detailed report of the error
-             * After fixing the issue (if there's any), just click on the 'New report' button in order to process the receipt again
-             * If it is an error contacting the Itunes/GooglePlay API, IAPHUB will retry to process the receipt automatically as well
-             */
-            else if (err.code == "receipt_validation_failed") {
-              Alert.alert(
-                "Estamos enfrentando problemas",
-                "Estamos com alguns problemas na validação de sua compra, estamos trabalhando para corrigir isso!"
-              );
-            }
-            /*
-             * The receipt has been processed on IAPHUB but is invalid
-             * It could be a fraud attempt, using apps such as Freedom or Lucky Patcher on an Android rooted device
-             */
-            else if (err.code == "receipt_invalid") {
-              Alert.alert(
-                "Comprovante inválido",
-                "Não foi possível processar sua compra, se você foi cobrado, entre em contato com o suporte (contato.almeidadev@gmail.com)"
-              );
-            }
-            /*
-             * The receipt hasn't been validated on IAPHUB (Could be an issue like a network error...)
-             * The user will have to restore its purchases in order to validate the transaction
-             * An automatic restore should be triggered on every relaunch of your app since the transaction hasn't been 'finished'
-             * Android should automatically refund transactions that are not 'finished' after 3 days
-             */
-            else if (err.code == "receipt_request_failed") {
-              Alert.alert(
-                "Problemas na validação da compra",
-                "Houve um problema na validação da transação, tente reiniciar o aplicativo. Se o problema persistir, a Google Play irá reembolsar a compra após 3 dias úteis. Do contrário, entre em contato com nossa equipe.",
-                [
-                  {text: 'Cancel', style: 'cancel'},
-                  {text: 'Ok!', onPress: () => {
-                    navigation.navigate("PreLoadScreen")
-                  }}
-                ]
-              );
-            }
-            /*
-             * The user has already an active subscription on a different platform (android or ios)
-             * This security has been implemented to prevent a user from ending up with two subscriptions of different platforms
-             * You can disable the security by providing the 'crossPlatformConflict' parameter to the buy method (Iaphub.buy(sku, {crossPlatformConflict: false}))
-             */
-            // else if (err.code == "cross_platform_conflict") {
-            //   Alert.alert(
-            //     `Seems like you already have a subscription on ${err.params.platform}`,
-            //     `You have to use the same platform to change your subscription or wait for your current subscription to expire`
-            //   );
-            // }
-            // Couldn't buy product for many other reasons (the user shouldn't be charged)
-            else {
-              Alert.alert(
-                "Erro na compra",
-                "Não foi possível processar sua compra, tente novamente mais tarde."
-              );
-            }
+          });
+          /*
+            * The purchase has been successful but we need to check that the webhook to our server was successful as well
+            * If the webhook request failed, IAPHUB will send you an alert and retry again in 1 minute, 10 minutes, 1 hour and 24 hours.
+            * You can retry the webhook directly from the dashboard as well
+            */
+          if (transaction.webhookStatus == "failed") {
+            Alert.alert(
+              "Compra em processamento",
+              "Sua compra foi bem-sucedida, mas precisamos de mais algum tempo para validá-la, os recursos Premium serão liberados em breve (reinicie o app para verificar)! Caso contrário, entre em contato com o suporte (contato.almeidadev@gmail.com) "
+            );
           }
+          // Everything was successful! Yay!
+          else {
+
+            await api.post('/setPremiumStatus', {
+              deviceId: getUniqueId()
+            })
+
+            Alert.alert(
+              "Compra bem sucedida",
+              "Sua compra foi realizada com sucesso! Muito obrigado, os recursos premium serão liberados em breve.",
+              [
+                  {
+                    text: "Ok!",
+                    onPress: () => {
+                      setPremium(true)
+                      navigation.navigate("PreLoadScreen")
+                    },
+                    style: "cancel"
+                  }
+              ],
+                { cancelable: false }
+            );
+          }
+        } catch (err) {
+          // alert(err.code)
+          // Couldn't buy product because it has been bought in the past but hasn't been consumed (restore needed)
+          if (err.code == "product_already_owned") {
+            Alert.alert(
+              "Você já possui esse produto!",
+              "Por favor, restaure a sua compra para tentar corrigir o problema",
+              [
+                {text: 'Cancel', style: 'cancel'},
+                {text: 'Ok, Restaurar!', onPress: async () => {
+                  await Iaphub.restore().then((res) => {
+                    navigation.navigate("PreLoadScreen")
+                  })
+                }}
+              ]
+            );
+          }
+          // The payment has been deferred (its final status is pending external action such as 'Ask to Buy')
+          else if (err.code == "deferred_payment") {
+            Alert.alert(
+              "Compra aguardando confirmação",
+              "Sua compra foi processada, mas está aguardando aprovação."
+            );
+          }
+          /*
+            * The receipt has been processed on IAPHUB but something went wrong
+            * It is probably because of an issue with the configuration of your app or a call to the Itunes/GooglePlay API that failed
+            * IAPHUB will send you an email notification when a receipt fails, by checking the receipt on the dashboard you'll find a detailed report of the error
+            * After fixing the issue (if there's any), just click on the 'New report' button in order to process the receipt again
+            * If it is an error contacting the Itunes/GooglePlay API, IAPHUB will retry to process the receipt automatically as well
+            */
+          else if (err.code == "receipt_validation_failed") {
+            Alert.alert(
+              "Estamos enfrentando problemas",
+              "Estamos com alguns problemas na validação de sua compra, estamos trabalhando para corrigir isso!"
+            );
+          }
+          /*
+            * The receipt has been processed on IAPHUB but is invalid
+            * It could be a fraud attempt, using apps such as Freedom or Lucky Patcher on an Android rooted device
+            */
+          else if (err.code == "receipt_invalid") {
+            Alert.alert(
+              "Comprovante inválido",
+              "Não foi possível processar sua compra, se você foi cobrado, entre em contato com o suporte (contato.almeidadev@gmail.com)"
+            );
+          }
+          /*
+            * The receipt hasn't been validated on IAPHUB (Could be an issue like a network error...)
+            * The user will have to restore its purchases in order to validate the transaction
+            * An automatic restore should be triggered on every relaunch of your app since the transaction hasn't been 'finished'
+            * Android should automatically refund transactions that are not 'finished' after 3 days
+            */
+          else if (err.code == "receipt_request_failed") {
+            Alert.alert(
+              "Problemas na validação da compra",
+              "Houve um problema na validação da transação, tente reiniciar o aplicativo. Se o problema persistir, a Google Play irá reembolsar a compra após 3 dias úteis. Do contrário, entre em contato com nossa equipe.",
+              [
+                {text: 'Cancel', style: 'cancel'},
+                {text: 'Ok!', onPress: () => {
+                  navigation.navigate("PreLoadScreen")
+                }}
+              ]
+            );
+          }
+          /*
+            * The user has already an active subscription on a different platform (android or ios)
+            * This security has been implemented to prevent a user from ending up with two subscriptions of different platforms
+            * You can disable the security by providing the 'crossPlatformConflict' parameter to the buy method (Iaphub.buy(sku, {crossPlatformConflict: false}))
+            */
+          // else if (err.code == "cross_platform_conflict") {
+          //   Alert.alert(
+          //     `Seems like you already have a subscription on ${err.params.platform}`,
+          //     `You have to use the same platform to change your subscription or wait for your current subscription to expire`
+          //   );
+          // }
+          // Couldn't buy product for many other reasons (the user shouldn't be charged)
+          else {
+            Alert.alert(
+              "Erro na compra",
+              "Não foi possível processar sua compra, tente novamente mais tarde."
+            );
+          }
+        }
     }
 
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
               <View style={styles.logoBox}>
                   <Text style={styles.appTitle}>TimeToReview - Premium</Text>
                   <Image source={logo} style={{width: 250, height: 250}} />
                   {
                     premium ? 
-                    <Text style={styles.appPrice}>Você já é Premium! {products[0].priceAmount}</Text>
+                    <Text style={styles.appPrice}>Você já é Premium!</Text>
                     :
                     <>
                       <Text style={styles.appPriceLabel}>Por apenas:</Text>
@@ -192,7 +197,7 @@ const BePremiumScreen = (props) => {
               <BenefitsCard>
                 <Text style={styles.benefitTitleLabel}>Múltiplas Imagens</Text>
                 <Icon name="switcher" size={70} color="#303030" />
-                <Text style={styles.benefitLabel}>- Anexe quantaaas imagens desejar nas suas revisões.</Text>
+                <Text style={styles.benefitLabel}>- Anexe quantas imagens desejar nas suas revisões.</Text>
               </BenefitsCard>
               <BenefitsCard>
                 <Text style={styles.benefitTitleLabel}>Sem Anúncios!</Text>
@@ -216,16 +221,10 @@ const BePremiumScreen = (props) => {
               </BenefitsCard>
             </ScrollView>
             <View style={styles.termLabelBox}>
-              <Text onPress={async () => {
-                setHandleTermModal(true)
-                alert('buy')
-                var products = await Iaphub.getProductsForSale();
-                alert(products[0].price)
-                setProducts[products]
-                }} style={styles.termLabel}>Termos e condições</Text>
+              <Text onPress={async () => { setHandleTermModal(true) }} style={styles.termLabel}>Termos e condições</Text>
               {
                 !premium &&
-                <> 
+                <>
                   <Text style={[styles.termLabel, {textDecorationLine: 'none'}]}>|</Text>
                   <Text onPress={async () => {
 
@@ -239,7 +238,7 @@ const BePremiumScreen = (props) => {
             </View>
             <View style={{marginVertical: 10, width: '100%', alignSelf: 'center', alignItems: 'center'}}>
               {/* {!premium */}
-              {true
+              {!premium
                 &&
                 <CustomButton text="COMPRAR" color='#e74e36' onPress={handleBuyButton}/>
               }
@@ -269,7 +268,7 @@ const BePremiumScreen = (props) => {
                    </ScrollView>
                 </CustomModal> : null
             }
-        </View>
+      </View>
     )
 }
 

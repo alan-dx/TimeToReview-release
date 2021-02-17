@@ -2,6 +2,7 @@ import React, {createContext, useState, useEffect} from 'react';
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Alert } from 'react-native';
+import { getUniqueId } from 'react-native-device-info';
 
 const AuthContext = createContext();
 
@@ -24,7 +25,8 @@ export const AuthProvider = (props) => {
         console.log('---->', currentDate, currentDate.getUTCDay())
 
         return await api.post('/listUser', {
-            date: currentDate
+            date: currentDate,
+            deviceId: getUniqueId()
         })
     }
 

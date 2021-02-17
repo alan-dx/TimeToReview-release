@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     logoBox: {
         backgroundColor: '#FFF',
         width: '90%',
-        minHeight: 350,
+        flex: 1,
+        minHeight: 250,
         borderRadius: 15,
         
         alignItems: 'center',

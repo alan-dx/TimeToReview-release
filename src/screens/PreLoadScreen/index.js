@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
+import { View, ActivityIndicator, Text, ToastAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AuthContext from '../../contexts/auth';
 import Iaphub from 'react-native-iaphub';
@@ -46,9 +46,9 @@ const PreLoadScreen = () => {
             // iap setup
             await Iaphub.init({
                 // The app id is available on the settings page of your app
-                appId: "6023f89a1dc86c0ec39828c5",
+                appId: "",
                 // The (client) api key is available on the settings page of your app
-                apiKey: "xoOYooCfWoPWGAqk5lp9yfgq56PUfMB",
+                apiKey: "",
                 // App environment (production by default, other environments must be created on the IAPHUB dashboard)
                 environment: "production"
             });
@@ -57,12 +57,12 @@ const PreLoadScreen = () => {
             
             var products = await Iaphub.getActiveProducts();
 
+            // alert(products[0].title)
+
             if (products[0]) {
-                alert('products')
-                alert(products)
+                // alert(products[0].sku)
                 setPremium(true)
             }
-            // alert(getUniqueId())
 
             //iap setup
 
@@ -73,7 +73,7 @@ const PreLoadScreen = () => {
 
         }).catch((err) => {
             alert(err)
-            alert('Sessão expirada!')
+            ToastAndroid.show("Sessão expirada!", 2000)
             logoutContext()
         })
     }, [])
